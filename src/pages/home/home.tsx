@@ -1,10 +1,11 @@
-import * as React from "react";
+import React from "react";
+import Header from "../../components/header/header.tsx";
 
 const Forum:React.FC = () => {
     return (
-        <div>
-            <h1>Welcome to the Forum</h1>
-        </div>
+        <>
+            <Header/>
+        </>
     );
 };
 
