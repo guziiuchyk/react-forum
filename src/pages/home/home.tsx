@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../../components/header/header.tsx";
 
-const Forum:React.FC = () => {
+const Home:React.FC = () => {
     return (
         <>
             <Header/>
@@ -9,4 +9,4 @@ const Forum:React.FC = () => {
     );
 };
 
-export default Forum;
+export default Home;

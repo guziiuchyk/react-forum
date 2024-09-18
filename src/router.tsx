@@ -1,14 +1,12 @@
 import {createBrowserRouter} from "react-router-dom";
 import Home from "./pages/home/home.tsx";
-import Forum from "./pages/forum/forum.tsx";
+import Error from "./pages/error/error.tsx";
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <Home/>,
+        errorElement: <Error/>
     },
-    {
-        path: "/forum",
-        element: <Forum/>,
-    },
+
 ]);

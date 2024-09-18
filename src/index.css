@@ -5,6 +5,7 @@ html,body{
     width: 100%;
     font-family: Poppins, sans-serif;
     color: var(--primary-font-color);
+    background-color: var(--secondary-color);
 }
 input {
     all: unset;
