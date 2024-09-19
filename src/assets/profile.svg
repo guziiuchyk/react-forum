@@ -1,11 +1,10 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect x="0.5" y="0.5" width="39" height="39" rx="7.5" stroke="#EA942C"/>
-<rect x="3" y="3" width="34" height="34" rx="6" fill="#F9DFC0"/>
-<mask id="mask0_3860_611" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="5" y="4" width="30" height="32">
-<path d="M33.8462 24.2105L29 27.3544C29 27.3544 28.442 28.2808 28 28.814C27.48 29.4415 26.5 30.7602 26.5 30.7602L26.3462 31.5088L23.4615 36L13.6538 34.8772L6.15385 26.4561L5 12.9825L11.9231 5.12281L23.4615 4L31.5385 7.36842L35 18.0351L33.8462 24.2105Z" fill="black"/>
+<svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="34" height="34" rx="6" fill="#F9DFC0"/>
+<mask id="mask0_3860_611" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="1" width="30" height="32">
+<path d="M30.8462 21.2105L26 24.3544C26 24.3544 25.442 25.2808 25 25.814C24.48 26.4415 23.5 27.7602 23.5 27.7602L23.3462 28.5088L20.4615 33L10.6538 31.8772L3.15385 23.4561L2 9.98246L8.92308 2.12281L20.4615 1L28.5385 4.36842L32 15.0351L30.8462 21.2105Z" fill="black"/>
 </mask>
 <g mask="url(#mask0_3860_611)">
-<rect x="2.69141" y="2.87726" width="39.2308" height="38.1754" fill="url(#pattern0_3860_611)"/>
+<rect x="-0.308594" y="-0.122742" width="39.2308" height="38.1754" fill="url(#pattern0_3860_611)"/>
 </g>
 <defs>
 <pattern id="pattern0_3860_611" patternContentUnits="objectBoundingBox" width="1" height="1">
