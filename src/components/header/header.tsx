@@ -9,7 +9,10 @@ import profileImage from "../../assets/profile.svg"
 import groupImage from "../../assets/group.svg"
 import aboutUsImg from "../../assets/about-us.svg"
 
-const Header:React.FC = () => {
+const Header: React.FC = () => {
+
+    const isAuth: boolean = false
+
     return <header className={styles.wrapper}>
         <div className={styles.logo_and_nav}>
             <div className={styles.logo}>
@@ -28,7 +31,7 @@ const Header:React.FC = () => {
             <button className={styles.search__button}><img className={styles.search__button__img} src={searchImage}
                                                            alt="search"/></button>
         </div>
-        <div className={styles.profile_wrapper}>
+        {isAuth ? <div className={styles.profile_wrapper}>
             <Link to={"/"} className={styles.profile__link}><img src={notificationImage}
                                                                  alt="notifications link"/></Link>
             <Link to={"/"} className={styles.profile__link}><img src={messageImage} alt="messages link"/></Link>
@@ -37,7 +40,12 @@ const Header:React.FC = () => {
                 <Link to={"/profile"} className={styles.profile__name}>Asta1945</Link>
                 <div className={styles.profile__pop_up}>¤</div>
             </div>
+        </div> : <div className={styles.login}>
+            <Link className={styles.login__button} to={"/login"}>Login</Link>
+            <span className={styles.separator}> | </span>
+            <Link className={styles.login__button} to={"/register"}>Register</Link>
         </div>
+        }
     </header>
 }
 

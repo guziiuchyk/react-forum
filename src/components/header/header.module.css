@@ -123,3 +123,10 @@
     display: flex;
     align-items: center;
 }
+
+.login__button{
+    font-size: 16px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: var(--ui-elements-color);
+}
