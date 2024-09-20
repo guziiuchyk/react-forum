@@ -11,7 +11,7 @@ import aboutUsImg from "../../assets/about-us.svg"
 
 const Header: React.FC = () => {
 
-    const isAuth: boolean = false
+    const isAuth: boolean = true
 
     return <header className={styles.wrapper}>
         <div className={styles.logo_and_nav}>

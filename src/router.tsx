@@ -4,6 +4,7 @@ import Error from "./pages/error/error.tsx";
 import CreatePost from "./pages/createPost/createPost.tsx";
 import Login from "./pages/login/login.tsx";
 import Register from "./pages/register/register.tsx";
+import Profile from "./pages/profile/profile.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -24,6 +25,11 @@ export const router = createBrowserRouter([
     {
         path: "/register",
         element: <Register/>,
+        errorElement: <Error/>
+    },
+    {
+        path: "/profile",
+        element: <Profile/>,
         errorElement: <Error/>
     },
 ]);
