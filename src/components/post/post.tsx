@@ -5,33 +5,52 @@ import likeImage from "../../assets/like.svg"
 import likeActiveImage from "../../assets/like-active.svg"
 import profileImage from "../../assets/profile.svg"
 
-const Error: React.FC = () => {
+type PostProps = {
+    topic: string,
+    author: { name: string, date: string, id:number },
+    tags: string[],
+    info: { views: number, comments: number, likes: number },
+    isLiked: boolean,
+}
 
-    const isActive:boolean = true
+type TagProps = {
+    tag: string;
+};
+
+
+const Tag: React.FC<TagProps> = ({ tag }) => {
+    return (
+        <Link to={`/tags/${tag}`} className={styles.tag}>
+            {tag}
+        </Link>
+    );
+};
+const Post: React.FC<PostProps> = (props: PostProps) => {
+
+    const {topic, author, tags, info, isLiked} = props;
 
     return (
         <div className={styles.wrapper}>
-            <div className={styles.title}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate, eos?
+            <div className={styles.title}>{topic}
             </div>
             <button className={styles.like_wrapper}>
-                <div className={styles.like}><img className={styles.like__img} src={isActive ? likeActiveImage : likeImage} alt="like"/></div>
+                <div className={styles.like}><img className={styles.like__img}
+                                                  src={isLiked ? likeActiveImage : likeImage} alt="like"/></div>
             </button>
             <div className={styles.tags}>
-                <Link to={"/tags/finance"} className={styles.tag}>finance</Link>
-                <Link to={"/tags/trade"} className={styles.tag}>trade</Link>
-                <Link to={"/tags/lorem"} className={styles.tag}>lorem</Link>
+                {tags?.map(tag => (<Tag key={tag} tag={tag}/>))}
             </div>
             <div className={styles.author}>
                 <img className={styles.author__img} src={profileImage} alt="author"/>
-                <Link to={"/profiles/71759345923"} className={styles.author__name}>Asta1945</Link>
+                <Link to={`/profiles/${author.id}`} className={styles.author__name}>{author.name}</Link>
             </div>
             <div className={styles.info}>
-                <span className={styles.info__element}>200 Views</span>
-                <span className={styles.info__element}>20 Likes</span>
-                <span className={styles.info__element}>50 Comments</span>
+                <span className={styles.info__element}>{info.views}</span>
+                <span className={styles.info__element}>{info.likes}</span>
+                <span className={styles.info__element}>{info.comments}</span>
             </div>
         </div>
     );
 };
 
-export default Error;
+export default Post;
