@@ -4,6 +4,9 @@ import {Link} from "react-router-dom";
 import profileImage from "../../../assets/profile.svg"
 
 const Home: React.FC = () => {
+
+
+
     return (
         <>
             <div className={styles.wrapper}>

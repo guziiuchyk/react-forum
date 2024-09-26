@@ -5,6 +5,7 @@ import CreatePost from "./pages/createPost/createPost.tsx";
 import Login from "./pages/login/login.tsx";
 import Register from "./pages/register/register.tsx";
 import Profile from "./pages/profile/profile.tsx";
+import PostPage from "./pages/post/postPage.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -30,6 +31,11 @@ export const router = createBrowserRouter([
     {
         path: "/profile",
         element: <Profile/>,
+        errorElement: <Error/>
+    },
+    {
+        path: "/posts/:id",
+        element: <PostPage/>,
         errorElement: <Error/>
     },
 ]);

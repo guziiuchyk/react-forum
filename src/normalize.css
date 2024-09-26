@@ -26,6 +26,7 @@ button {
     color: inherit;
     outline: none;
     appearance: none;
+    user-select: none;
 }
 a {
     text-decoration: none;

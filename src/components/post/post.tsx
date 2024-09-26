@@ -4,13 +4,13 @@ import {Link} from "react-router-dom";
 import likeImage from "../../assets/like.svg"
 import likeActiveImage from "../../assets/like-active.svg"
 import profileImage from "../../assets/profile.svg"
-
 type PostProps = {
     topic: string,
-    author: { name: string, date: string, id:number },
+    author: { name: string, date: string, id:string },
     tags: string[],
     info: { views: number, comments: number, likes: number },
     isLiked: boolean,
+    id: number
 }
 
 type TagProps = {
@@ -27,12 +27,12 @@ const Tag: React.FC<TagProps> = ({ tag }) => {
 };
 const Post: React.FC<PostProps> = (props: PostProps) => {
 
-    const {topic, author, tags, info, isLiked} = props;
+    const {topic, author, tags, info, isLiked, id} = props;
 
     return (
         <div className={styles.wrapper}>
-            <div className={styles.title}>{topic}
-            </div>
+            <Link to={`/posts/${id}`} className={styles.title}>{topic}
+            </Link>
             <button className={styles.like_wrapper}>
                 <div className={styles.like}><img className={styles.like__img}
                                                   src={isLiked ? likeActiveImage : likeImage} alt="like"/></div>
