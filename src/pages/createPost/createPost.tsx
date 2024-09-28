@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styles from "./CreatePost.module.css";
 import Header from "../../components/header/header.tsx";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/useAuth.ts";
 import axios from "axios";
 
@@ -11,6 +11,7 @@ const CreatePost: React.FC = () => {
     const [content, setContent] = useState("");
     const [tags, setTags] = useState("");
 
+    const location = useLocation();
     const navigate = useNavigate();
 
     const isAuthenticated = useAuth();
@@ -18,7 +19,10 @@ const CreatePost: React.FC = () => {
         if (!isAuthenticated) {
             navigate("/login", {replace: true});
         }
-    }, [isAuthenticated, navigate]);
+        if (location.state && location.state.topic) {
+            setTopic(location.state.topic);
+        }
+    }, [isAuthenticated, location.state, navigate]);
 
     const handleTopic = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
         setTopic(e.target.value);
