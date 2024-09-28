@@ -14,7 +14,7 @@ const Home: React.FC = () => {
     }
 
     const handleButton = ():void => {
-        navigate("/create-post", {replace: true,state:{topic:text}});
+        navigate("/create-post", {state:{topic:text}});
     }
 
     return (

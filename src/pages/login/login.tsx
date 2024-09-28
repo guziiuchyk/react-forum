@@ -33,9 +33,9 @@ const Login: React.FC = () => {
         axios.post("http://localhost:8000/api/login", {email, password}, {
             withCredentials: true
         }).then(() => {
-            axios.get("http://localhost:8000/api/my-profile").then((res) => {
+            axios.get("http://localhost:8000/api/my-profile", {withCredentials:true}).then((res) => {
                 dispatch(login(res.data));
-                navigate("/profile", {replace: true});
+                navigate("/profile");
             })
         }).catch(() => {
             setError("Wrong email or password");
