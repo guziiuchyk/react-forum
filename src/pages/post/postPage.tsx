@@ -6,6 +6,7 @@ import likeActiveImage from "../../assets/like-active.svg";
 import likeImage from "../../assets/like.svg";
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
+import NotFound from "../../components/notFound/notFound.tsx";
 
 interface Post {
     id: number;
@@ -32,8 +33,7 @@ const PostPage: React.FC = () => {
             axios.get(`http://localhost:8000/api/posts/${id}`).then((res) => {
                 setPost(res.data);
                 setLoading(false);
-            }).catch((error) => {
-                console.error("Failed to fetch post:", error);
+            }).catch(() => {
                 setLoading(false);
             });
         };
@@ -45,11 +45,12 @@ const PostPage: React.FC = () => {
     return (
         <>
             <Header/>
-            <div className={styles.wrapper}>
-                {loading ? (
-                    <div>Loading...</div>
-                ) : (
-                    post && (
+
+            {loading ? (
+                <div>Loading...</div>
+            ) : (
+                post ?
+                    <div className={styles.wrapper}>
                         <div className={styles.post}>
                             <div className={styles.like}>
                                 <img
@@ -82,9 +83,9 @@ const PostPage: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                    )
-                )}
-            </div>
+                    </div>
+                    : <NotFound/>
+            )}
         </>
     );
 };
