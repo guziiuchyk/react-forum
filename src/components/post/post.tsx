@@ -6,7 +6,7 @@ import likeActiveImage from "../../assets/like-active.svg"
 import profileImage from "../../assets/profile.svg"
 type PostProps = {
     topic: string,
-    author: { name: string, date: string, id:string },
+    author: { name: string, date: string, id:number },
     tags: string[],
     info: { views: number, comments: number, likes: number },
     isLiked: boolean,

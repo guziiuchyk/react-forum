@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Header from "../../components/header/header.tsx";
 import styles from "./login.module.css"
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth.ts";
 import {useDispatch} from "react-redux";
@@ -10,7 +10,6 @@ import {login} from "../../redux/slices/userSlice.ts";
 const Login: React.FC = () => {
 
     const navigate = useNavigate();
-    const location = useLocation();
     const dispatch = useDispatch();
     const isAuth = useAuth()
 
@@ -33,13 +32,11 @@ const Login: React.FC = () => {
 
         axios.post("http://localhost:8000/api/login", {email, password}, {
             withCredentials: true
-        })
-            .then((res) => {
-                dispatch(login(res.data.token));
-                setError("");
-                const from: string = location.state?.from?.pathname || '/profile';
-                console.log(location.state)
-                navigate(from, { replace: true });
+        }).then(() => {
+            axios.get("http://localhost:8000/api/my-profile").then((res) => {
+                dispatch(login(res.data));
+                navigate("/profile", {replace: true});
+            })
         }).catch(() => {
             setError("Wrong email or password");
         })

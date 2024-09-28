@@ -37,7 +37,7 @@ const CreatePost: React.FC = () => {
             topic,
             content: content,
         }, {withCredentials: true}).then((res) => {
-            console.log(res)
+            navigate(`/posts/${res.data.id}`, {replace: true});
         }).catch((err) => {
             console.log(err.response)
         })

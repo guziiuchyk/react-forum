@@ -6,11 +6,15 @@ import Post from "../../components/post/post.tsx";
 import axios from "axios";
 
 interface Post {
-    topic: string;
-    id:number;
-    content:string;
-    created_at: string;
-    user_id: string;
+    "id": number,
+    "topic": string,
+    "content": string,
+    "created_at": string,
+    "user": {
+        "id": number,
+        "username": string,
+        "email": string
+    }
 }
 
 const Home:React.FC = () => {
@@ -23,9 +27,6 @@ const Home:React.FC = () => {
 
             axios.get("http://localhost:8000/api/posts").then((res) => {
                 setIsLoading(false);
-                if (res.data?.detail){
-                    setPosts([])
-                }
                 setPosts(res.data);
             })
         }
@@ -42,7 +43,7 @@ const Home:React.FC = () => {
                             <Post
                                 key={index}
                                 topic={post.topic}
-                                author={{name: "dsfds",date: post.created_at, id:post.user_id}}
+                                author={{name: post.user.username,date: post.created_at, id:post.user.id}}
                                 tags={["fdsfsdf"]}
                                 info={{likes:1000, views:10000, comments:100000}}
                                 isLiked={true}
