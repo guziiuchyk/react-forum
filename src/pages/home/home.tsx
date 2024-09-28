@@ -17,13 +17,13 @@ interface Post {
     }
 }
 
-const Home:React.FC = () => {
+const Home: React.FC = () => {
 
     const [posts, setPosts] = useState<Post[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchPosts = ():void => {
+        const fetchPosts = (): void => {
 
             axios.get("http://localhost:8000/api/posts").then((res) => {
                 setIsLoading(false);
@@ -33,6 +33,7 @@ const Home:React.FC = () => {
         fetchPosts()
     }, []);
 
+
     return (
         <>
             <Header/>
@@ -40,16 +41,17 @@ const Home:React.FC = () => {
                 <CreatePost/>
                 {isLoading ? <div className={styles.loading}>Loading...</div> :
                     posts.map((post, index) => (
-                            <Post
-                                key={index}
-                                topic={post.topic}
-                                author={{name: post.user.username,date: post.created_at, id:post.user.id}}
-                                tags={["fdsfsdf"]}
-                                info={{likes:1000, views:10000, comments:100000}}
-                                isLiked={true}
-                                id={post.id}
-                            />
-                        ))}
+                        <Post
+                            key={index}
+                            topic={post.topic}
+                            author={{username: post.user.username, id: post.user.id}}
+                            tags={["fdsfsdf"]}
+                            info={{likes: 1000, views: 10000, comments: 100000}}
+                            isLiked={true}
+                            id={post.id}
+                            created_at={post.created_at}
+                        />
+                    ))}
             </div>
         </>
     );

@@ -4,13 +4,18 @@ import {Link} from "react-router-dom";
 import likeImage from "../../assets/like.svg"
 import likeActiveImage from "../../assets/like-active.svg"
 import profileImage from "../../assets/profile.svg"
-type PostProps = {
-    topic: string,
-    author: { name: string, date: string, id:number },
+
+interface PostProps {
+    "id": number,
+    "topic": string,
+    "created_at": string,
     tags: string[],
-    info: { views: number, comments: number, likes: number },
     isLiked: boolean,
-    id: number
+    info: { views: number, comments: number, likes: number },
+    author:{
+        username: string,
+        id: number
+    }
 }
 
 type TagProps = {
@@ -25,9 +30,9 @@ const Tag: React.FC<TagProps> = ({ tag }) => {
         </Link>
     );
 };
-const Post: React.FC<PostProps> = (props: PostProps) => {
+const Post: React.FC<PostProps> = (props) => {
 
-    const {topic, author, tags, info, isLiked, id} = props;
+    const {topic, tags, info, isLiked, id, created_at, author} = props;
 
     return (
         <div className={styles.wrapper}>
@@ -42,7 +47,10 @@ const Post: React.FC<PostProps> = (props: PostProps) => {
             </div>
             <div className={styles.author}>
                 <img className={styles.author__img} src={profileImage} alt="author"/>
-                <Link to={`/profiles/${author.id}`} className={styles.author__name}>{author.name}</Link>
+                <div className={styles.author_info}>
+                    <Link to={`/profiles/${author.id}`} className={styles.author__name}>{author.username}</Link>
+                    <span className={styles.info__date}>{created_at}</span>
+                </div>
             </div>
             <div className={styles.info}>
                 <span className={styles.info__element}>{info.views}</span>

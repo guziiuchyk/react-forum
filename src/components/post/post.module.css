@@ -68,26 +68,28 @@
     justify-content: end;
 }
 
-.author{
+.author {
     display: flex;
     align-items: center;
 }
 
-.author__img{
+.author__img {
     border-radius: 50%;
+    margin-right: 10px;
 }
 
-.author__name{
-    margin-left: 10px;
-}
-
-.info{
+.info {
     color: #C5D0E6;
     display: flex;
     align-items: center;
     justify-content: end;
 }
 
-.info__element{
+.info__element {
     margin: 0 20px;
+}
+
+.author_info {
+    display: flex;
+    flex-direction: column;
 }
