@@ -45,7 +45,7 @@ const Home: React.FC = () => {
                             key={index}
                             topic={post.topic}
                             author={{username: post.user.username, id: post.user.id}}
-                            tags={["fdsfsdf"]}
+                            tags={["test","test2","test3"]}
                             info={{likes: 1000, views: 10000, comments: 100000}}
                             isLiked={true}
                             id={post.id}

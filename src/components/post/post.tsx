@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import likeImage from "../../assets/like.svg"
 import likeActiveImage from "../../assets/like-active.svg"
 import profileImage from "../../assets/profile.svg"
+import useTimeAgo from "../../hooks/useTimeAgo.ts";
 
 interface PostProps {
     "id": number,
@@ -34,6 +35,8 @@ const Post: React.FC<PostProps> = (props) => {
 
     const {topic, tags, info, isLiked, id, created_at, author} = props;
 
+    const formatedDate = useTimeAgo(created_at)
+
     return (
         <div className={styles.wrapper}>
             <Link to={`/posts/${id}`} className={styles.title}>{topic}
@@ -49,7 +52,7 @@ const Post: React.FC<PostProps> = (props) => {
                 <img className={styles.author__img} src={profileImage} alt="author"/>
                 <div className={styles.author_info}>
                     <Link to={`/profiles/${author.id}`} className={styles.author__name}>{author.username}</Link>
-                    <span className={styles.info__date}>{created_at}</span>
+                    <span className={styles.info__date}>{formatedDate}</span>
                 </div>
             </div>
             <div className={styles.info}>

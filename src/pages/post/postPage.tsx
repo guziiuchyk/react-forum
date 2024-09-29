@@ -7,6 +7,7 @@ import likeImage from "../../assets/like.svg";
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 import NotFound from "../../components/notFound/notFound.tsx";
+import useTimeAgo from "../../hooks/useTimeAgo.ts";
 
 interface Post {
     id: number;
@@ -21,21 +22,23 @@ interface Post {
 }
 
 const PostPage: React.FC = () => {
-
     const isLiked = false;
     const {id} = useParams();
 
     const [post, setPost] = useState<Post | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const timeAgo = useTimeAgo(post?.created_at || "");
+
     useEffect(() => {
-        const fetchPost = (): void => {
-            axios.get(`http://localhost:8000/api/posts/${id}`).then((res) => {
+        const fetchPost = async (): Promise<void> => {
+            try {
+                const res = await axios.get(`http://localhost:8000/api/posts/${id}`);
                 setPost(res.data);
                 setLoading(false);
-            }).catch(() => {
+            } catch {
                 setLoading(false);
-            });
+            }
         };
         if (loading) {
             fetchPost();
@@ -49,7 +52,7 @@ const PostPage: React.FC = () => {
             {loading ? (
                 <div>Loading...</div>
             ) : (
-                post ?
+                post ? (
                     <div className={styles.wrapper}>
                         <div className={styles.post}>
                             <div className={styles.like}>
@@ -60,20 +63,20 @@ const PostPage: React.FC = () => {
                                 />
                             </div>
                             <div className={styles.topic}>
-                                {post?.topic}
+                                {post.topic}
                             </div>
                             <div className={styles.description}>
-                                {post?.content}
+                                {post.content}
                             </div>
                             <div className={styles.line}/>
                             <div className={styles.post_footer}>
                                 <div className={styles.author}>
                                     <img src={profileImage} alt="" className={styles.author__img}/>
                                     <div className={styles.author__info}>
-                                        <Link className={styles.author__name} to={`/profiles/${post?.user.id}`}>
-                                            {post?.user?.username}
+                                        <Link className={styles.author__name} to={`/profiles/${post.user.id}`}>
+                                            {post.user.username}
                                         </Link>
-                                        <div className={styles.author__date}>{post?.created_at}</div>
+                                        <div className={styles.author__date}>{timeAgo}</div>
                                     </div>
                                 </div>
                                 <div className={styles.info}>
@@ -84,7 +87,7 @@ const PostPage: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    : <NotFound/>
+                ) : <NotFound/>
             )}
         </>
     );

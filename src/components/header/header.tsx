@@ -1,6 +1,6 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import styles from "./header.module.css";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import homeImage from "../../assets/home.svg";
 import messageImage from "../../assets/message.svg";
 import searchImage from "../../assets/search_icon.svg";
@@ -8,14 +8,37 @@ import notificationImage from "../../assets/notification.svg";
 import profileImage from "../../assets/profile.svg";
 import groupImage from "../../assets/group.svg";
 import aboutUsImg from "../../assets/about-us.svg";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from '../../redux/store';
 import useAuth from "../../hooks/useAuth.ts";
+import {setSearchValue} from "../../redux/slices/searchSlice.ts";
 
 const Header: React.FC = () => {
-
     const user = useSelector((state: RootState) => state.user.user);
-    const isAuthenticated = useAuth()
+    const isAuthenticated = useAuth();
+
+    const searchText = useSelector((state: RootState) => state.search.value);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const navigate = useNavigate();
+    const location = useLocation()
+    const dispatch = useDispatch();
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        dispatch(setSearchValue(e.target.value))
+    };
+
+    useEffect(() => {
+        if (location.pathname === "/search-posts") {
+            inputRef.current?.focus();
+        }
+        if (location.pathname !== "/search-posts" && searchText !== "") {
+            navigate("/search-posts")
+        }
+        if (location.pathname === "/search-posts" && searchText === "") {
+            navigate("/")
+        }
+    }, [location.pathname, searchText, navigate])
+
     return (
         <header className={styles.wrapper}>
             <div className={styles.logo_and_nav}>
@@ -35,16 +58,18 @@ const Header: React.FC = () => {
                     </Link>
                 </nav>
             </div>
-            <div className={styles.search_wrapper}>
-                <input
-                    placeholder="Type here to search..."
-                    className={styles.search}
-                    type="text"
-                    maxLength={40}
-                />
-                <button className={styles.search__button}>
+            <div className={styles.search_wrapper}><input
+                ref={inputRef}
+                value={searchText}
+                onChange={handleInput}
+                placeholder="Type here to search..."
+                className={styles.search}
+                type="text"
+                maxLength={40}
+            />
+                <Link to={"/search-posts"} className={styles.search__button}>
                     <img className={styles.search__button__img} src={searchImage} alt="search"/>
-                </button>
+                </Link>
             </div>
             {isAuthenticated ? (
                 <div className={styles.profile_wrapper}>
