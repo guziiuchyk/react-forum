@@ -13,17 +13,13 @@ const useAuth = (): boolean => {
 
         const checkAuthentication = async (): Promise<void> => {
             try {
-                // Проверяем аутентификацию
                 await axios.get("http://localhost:8000/api/is-authenticated", { withCredentials: true });
 
-                // Если аутентифицирован, получаем профиль
                 const profile = await axios.get("http://localhost:8000/api/my-profile", { withCredentials: true });
 
-                // Диспатчим данные пользователя в Redux
                 dispatch(login(profile.data));
             } catch (error) {
                 console.error("Authentication check failed:", error);
-                // Обрабатываем ошибки, если нужно
             }
         };
 

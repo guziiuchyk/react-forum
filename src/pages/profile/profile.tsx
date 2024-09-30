@@ -33,8 +33,6 @@ const Profile: React.FC = () => {
                     console.log(err)
                     setIsLoading(false);
                 })
-            } else {
-                navigate("/login")
             }
         }
         if (isLoading) {

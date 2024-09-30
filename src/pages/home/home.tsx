@@ -4,22 +4,11 @@ import CreatePost from "./createPost/createPost.tsx";
 import styles from "./home.module.css";
 import Post from "../../components/post/post.tsx";
 import axios from "axios";
-
-interface Post {
-    "id": number,
-    "topic": string,
-    "content": string,
-    "created_at": string,
-    "user": {
-        "id": number,
-        "username": string,
-        "email": string
-    }
-}
+import {PostType} from "../../types/types.ts";
 
 const Home: React.FC = () => {
 
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<PostType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -45,7 +34,7 @@ const Home: React.FC = () => {
                             key={index}
                             topic={post.topic}
                             author={{username: post.user.username, id: post.user.id}}
-                            tags={["test","test2","test3"]}
+                            tags={post.tags}
                             info={{likes: 1000, views: 10000, comments: 100000}}
                             isLiked={true}
                             id={post.id}

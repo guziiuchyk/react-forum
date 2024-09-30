@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styles from "./header.module.css";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import homeImage from "../../assets/home.svg";
@@ -8,10 +8,13 @@ import notificationImage from "../../assets/notification.svg";
 import profileImage from "../../assets/profile.svg";
 import groupImage from "../../assets/group.svg";
 import aboutUsImg from "../../assets/about-us.svg";
+import expandArrow from "../../assets/expand-arrow.svg"
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from '../../redux/store';
 import useAuth from "../../hooks/useAuth.ts";
 import {setSearchValue} from "../../redux/slices/searchSlice.ts";
+import {logout} from "../../redux/slices/userSlice.ts";
+import axios from "axios";
 
 const Header: React.FC = () => {
     const user = useSelector((state: RootState) => state.user.user);
@@ -22,6 +25,7 @@ const Header: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
+    const [isActive, setIsActive] = useState(false);
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
         dispatch(setSearchValue(e.target.value));
@@ -29,24 +33,41 @@ const Header: React.FC = () => {
             navigate("/search-posts");
             return
         }
-        if(e.target.value === ""){
+        if (e.target.value === "") {
             navigate("/");
         }
     };
 
     console.log(location.pathname);
-
-    useEffect(() => {
-        if (location.pathname !== "/search-posts") {
-            dispatch(setSearchValue(""));
-        }
-    }, [location.pathname, dispatch]);
-
+    
     useEffect(() => {
         if (location.pathname === "/search-posts") {
             inputRef.current?.focus();
+        } else {
+            dispatch(setSearchValue(""));
         }
-    }, [location.pathname, searchText, navigate]);
+        document.addEventListener('mousedown', handleClickOutside);
+        return ()=>{
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [location.pathname, searchText, navigate, dispatch]);
+
+    const handlePopUpButton = () => {
+        setIsActive(!isActive);
+    }
+
+    const handleClickOutside = () => {
+        if(isActive){
+            setIsActive(false);
+        }
+    };
+
+    const handleLogoutButton = () => {
+        axios.post("http://localhost:8000/api/logout", {}, {withCredentials:true}).then(() => {
+            dispatch(logout());
+            navigate("/login");
+        })
+    }
 
     return (
         <header className={styles.wrapper}>
@@ -89,11 +110,18 @@ const Header: React.FC = () => {
                     <Link to={"/"} className={styles.profile__link}>
                         <img src={messageImage} alt="messages link"/>
                     </Link>
-                    <div className={styles.profile}>
+                    <div className={`${styles.profile} ${isActive ? styles.active : ""}`}>
                         <img className={styles.profile__img} src={profileImage} alt="profile"/>
                         <Link to={"/profile"} className={styles.profile__name}>
                             {user?.username}
                         </Link>
+                        <button onClick={handlePopUpButton} className={styles.profile__pop_up_button}><img className={styles.profile__pop_up__img} src={expandArrow} alt="expand arrow"/></button>
+                        <div className={styles.pop_up_wrapper}>
+                            <div className={styles.line}></div>
+                            <Link to={"#"}>Edit profile</Link>
+                            <Link to={"#"}>Settings</Link>
+                            <button onClick={handleLogoutButton}>Logout</button>
+                        </div>
                     </div>
                 </div>
             ) : (

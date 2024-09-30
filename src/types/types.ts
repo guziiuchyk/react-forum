@@ -3,6 +3,7 @@ export interface PostType {
     "topic": string,
     "content": string,
     "created_at": string,
+    "tags": string[],
     "user": {
         "id": number,
         "username": string,
