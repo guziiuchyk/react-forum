@@ -20,31 +20,40 @@ const Header: React.FC = () => {
     const searchText = useSelector((state: RootState) => state.search.value);
     const inputRef = useRef<HTMLInputElement | null>(null);
     const navigate = useNavigate();
-    const location = useLocation()
+    const location = useLocation();
     const dispatch = useDispatch();
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        dispatch(setSearchValue(e.target.value))
+        dispatch(setSearchValue(e.target.value));
+        if (location.pathname !== "/search-posts" && e.target.value !== "") {
+            navigate("/search-posts");
+            return
+        }
+        if(e.target.value === ""){
+            navigate("/");
+        }
     };
+
+    console.log(location.pathname);
+
+    useEffect(() => {
+        if (location.pathname !== "/search-posts") {
+            dispatch(setSearchValue(""));
+        }
+    }, [location.pathname, dispatch]);
 
     useEffect(() => {
         if (location.pathname === "/search-posts") {
             inputRef.current?.focus();
         }
-        if (location.pathname !== "/search-posts" && searchText !== "") {
-            navigate("/search-posts")
-        }
-        if (location.pathname === "/search-posts" && searchText === "") {
-            navigate("/")
-        }
-    }, [location.pathname, searchText, navigate])
+    }, [location.pathname, searchText, navigate]);
 
     return (
         <header className={styles.wrapper}>
             <div className={styles.logo_and_nav}>
                 <div className={styles.logo}>
-                    <span className={styles.logo__img}>G</span>
-                    <div className={styles.logo__text}>Huziichuk</div>
+                    <span className={styles.logo__img}>A</span>
+                    <div className={styles.logo__text}>Agora</div>
                 </div>
                 <nav className={styles.links}>
                     <Link to={"/"} className={styles.link_wrapper}>
@@ -58,15 +67,16 @@ const Header: React.FC = () => {
                     </Link>
                 </nav>
             </div>
-            <div className={styles.search_wrapper}><input
-                ref={inputRef}
-                value={searchText}
-                onChange={handleInput}
-                placeholder="Type here to search..."
-                className={styles.search}
-                type="text"
-                maxLength={40}
-            />
+            <div className={styles.search_wrapper}>
+                <input
+                    ref={inputRef}
+                    value={searchText}
+                    onChange={handleInput}
+                    placeholder="Type here to search..."
+                    className={styles.search}
+                    type="text"
+                    maxLength={40}
+                />
                 <Link to={"/search-posts"} className={styles.search__button}>
                     <img className={styles.search__button__img} src={searchImage} alt="search"/>
                 </Link>

@@ -15,7 +15,7 @@ function useTimeAgo(dateString: string): string {
     };
 
     const timeAgoOrDate = (dateString: string): string => {
-        const date = new Date(dateString+"Z");
+        const date = new Date(dateString);
         const now = new Date();
         const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
         const oneWeekInSeconds = 7 * 24 * 60 * 60;

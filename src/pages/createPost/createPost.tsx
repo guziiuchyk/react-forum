@@ -40,6 +40,7 @@ const CreatePost: React.FC = () => {
         axios.post("http://localhost:8000/api/posts", {
             topic,
             content: content,
+            tags: tags.split(" "),
         }, {withCredentials: true}).then((res) => {
             navigate(`/posts/${res.data.id}`, {replace: true});
         }).catch((err) => {

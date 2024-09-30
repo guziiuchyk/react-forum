@@ -1,0 +1,27 @@
+export interface PostType {
+    "id": number,
+    "topic": string,
+    "content": string,
+    "created_at": string,
+    "user": {
+        "id": number,
+        "username": string,
+        "email": string
+    }
+}
+
+export interface UserType {
+    id: number;
+    username: string;
+    email: string;
+    "profile_picture":string;
+}
+
+export interface UserPostType{
+    id:number;
+    user_id: number;
+    topic:string;
+    content:string;
+    created_at: string;
+    tags:string[];
+}
