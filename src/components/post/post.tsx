@@ -10,6 +10,7 @@ import useTimeAgo from "../../hooks/useTimeAgo.ts";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
 import axios from "axios";
+import Tag from "./tag/tag.tsx";
 
 interface PostProps {
     "id": number,
@@ -23,18 +24,6 @@ interface PostProps {
         id: number
     }
 }
-
-type TagProps = {
-    tag: string;
-};
-
-const Tag: React.FC<TagProps> = ({tag}) => {
-    return (
-        <Link to={`/tags/${tag}`} className={styles.tag}>
-            {tag}
-        </Link>
-    );
-};
 
 const Post: React.FC<PostProps> = (props) => {
 
