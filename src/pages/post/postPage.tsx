@@ -9,6 +9,7 @@ import axios from "axios";
 import NotFound from "../../components/notFound/notFound.tsx";
 import useTimeAgo from "../../hooks/useTimeAgo.ts";
 import {PostType} from "../../types/types.ts";
+import Tag from "../../components/post/tag/tag.tsx";
 
 const PostPage: React.FC = () => {
     const isLiked = false;
@@ -56,6 +57,9 @@ const PostPage: React.FC = () => {
                             </div>
                             <div className={styles.description}>
                                 {post.content}
+                            </div>
+                            <div className={styles.tags}>
+                                {post.tags.map(tag => <Tag key={tag} tag={tag} />)}
                             </div>
                             <div className={styles.line}/>
                             <div className={styles.post_footer}>

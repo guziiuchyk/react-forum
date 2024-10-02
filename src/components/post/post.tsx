@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {useRef, useState} from "react";
 import styles from "./post.module.css";
 import {Link} from "react-router-dom";
 import likeImage from "../../assets/like.svg"
@@ -11,6 +11,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
 import axios from "axios";
 import Tag from "./tag/tag.tsx";
+import ConfirmationModal from "../confirmationModal/confirmationModal.tsx";
 
 interface PostProps {
     "id": number,
@@ -33,6 +34,7 @@ const Post: React.FC<PostProps> = (props) => {
     const user = useSelector((state: RootState) => state.user.user);
     const isAuthor = author?.id === user?.id;
     const wrapperRef = useRef<HTMLDivElement | null>(null)
+    const [isModalOpen, setModalOpen] = useState(false);
 
     const deletePost = (id:number):void => {
         axios.delete(`http://localhost:8000/api/posts/${id}`, {withCredentials:true}).then(()=> {
@@ -54,7 +56,7 @@ const Post: React.FC<PostProps> = (props) => {
                             <img className={styles.button__img} src={editImage} alt="like"/>
                         </div>
                     </button>
-                    <button onClick={()=>{deletePost(id)}}>
+                    <button onClick={()=>{setModalOpen(true)}}>
                         <div className={styles.button}>
                             <img className={styles.button__img} src={removeImage} alt="like"/>
                         </div>
@@ -80,6 +82,12 @@ const Post: React.FC<PostProps> = (props) => {
                 <span className={styles.info__element}>{info.likes}</span>
                 <span className={styles.info__element}>{info.comments}</span>
             </div>
+            <ConfirmationModal
+                text={"Are you sure you want to delete this post?"}
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                onConfirm={()=>{deletePost(id)}}
+            />
         </div>
     );
 };
