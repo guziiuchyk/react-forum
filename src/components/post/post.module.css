@@ -12,7 +12,7 @@
     grid-area: 1 / 1 / 2 / 6;
 }
 
-.like_wrapper {
+.buttons_wrapper {
     grid-area: 1 / 6 / 2 / 7;
 }
 
@@ -47,7 +47,7 @@
     height: 20px;
 }
 
-.like {
+.button {
     background-color: var(--ui-elements-color);
     padding: 5px;
     border-radius: 50%;
@@ -58,12 +58,12 @@
     justify-content: center;
 }
 
-.like__img {
+.button__img {
     width: 24px;
     height: 24px;
 }
 
-.like_wrapper {
+.buttons_wrapper {
     display: flex;
     justify-content: end;
 }
@@ -92,4 +92,8 @@
 .author_info {
     display: flex;
     flex-direction: column;
+}
+
+.buttons_wrapper button:nth-child(2) {
+    margin: 0 5px;
 }

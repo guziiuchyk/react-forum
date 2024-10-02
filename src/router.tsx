@@ -44,4 +44,9 @@ export const router = createBrowserRouter([
         element: <SearchPost/>,
         errorElement: <Error/>
     },
+    {
+        path: "/profile/:id",
+        element: <Profile/>,
+        errorElement: <Error/>
+    }
 ]);

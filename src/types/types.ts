@@ -15,7 +15,8 @@ export interface UserType {
     id: number;
     username: string;
     email: string;
-    "profile_picture":string;
+    profile_picture:string;
+    bio: string;
 }
 
 export interface UserPostType{

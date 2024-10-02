@@ -110,7 +110,7 @@
     display: flex;
     align-items: center;
     position: relative;
-    padding: 7px 7px 0 7px;
+    padding: 12px 12px 0 12px;
     box-sizing: border-box;
     border-radius: 5px 5px 0 0;
 }
@@ -151,7 +151,7 @@
     top: 100%;
     width: 100%;
     border-radius: 0 0 5px 5px;
-    padding: 0 7px 7px 7px;
+    padding: 0 12px 12px 12px;
     box-sizing: border-box;
     left: 0;
     flex-direction: column;

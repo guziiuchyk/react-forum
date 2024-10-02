@@ -38,8 +38,6 @@ const Header: React.FC = () => {
         }
     };
 
-    console.log(location.pathname);
-    
     useEffect(() => {
         if (location.pathname === "/search-posts") {
             inputRef.current?.focus();
@@ -47,7 +45,7 @@ const Header: React.FC = () => {
             dispatch(setSearchValue(""));
         }
         document.addEventListener('mousedown', handleClickOutside);
-        return ()=>{
+        return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         }
     }, [location.pathname, searchText, navigate, dispatch]);
@@ -57,13 +55,13 @@ const Header: React.FC = () => {
     }
 
     const handleClickOutside = () => {
-        if(isActive){
+        if (isActive) {
             setIsActive(false);
         }
     };
 
     const handleLogoutButton = () => {
-        axios.post("http://localhost:8000/api/logout", {}, {withCredentials:true}).then(() => {
+        axios.post("http://localhost:8000/api/logout", {}, {withCredentials: true}).then(() => {
             dispatch(logout());
             navigate("/login");
         })
@@ -115,7 +113,8 @@ const Header: React.FC = () => {
                         <Link to={"/profile"} className={styles.profile__name}>
                             {user?.username}
                         </Link>
-                        <button onClick={handlePopUpButton} className={styles.profile__pop_up_button}><img className={styles.profile__pop_up__img} src={expandArrow} alt="expand arrow"/></button>
+                        <button onClick={handlePopUpButton} className={styles.profile__pop_up_button}><img
+                            className={styles.profile__pop_up__img} src={expandArrow} alt="expand arrow"/></button>
                         <div className={styles.pop_up_wrapper}>
                             <div className={styles.line}></div>
                             <Link to={"#"}>Edit profile</Link>

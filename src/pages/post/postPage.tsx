@@ -8,24 +8,13 @@ import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 import NotFound from "../../components/notFound/notFound.tsx";
 import useTimeAgo from "../../hooks/useTimeAgo.ts";
-
-interface Post {
-    id: number;
-    topic: string;
-    content: string;
-    created_at: string;
-    user: {
-        id: number;
-        username: string;
-        email: string;
-    };
-}
+import {PostType} from "../../types/types.ts";
 
 const PostPage: React.FC = () => {
     const isLiked = false;
     const {id} = useParams();
 
-    const [post, setPost] = useState<Post | null>(null);
+    const [post, setPost] = useState<PostType | null>(null);
     const [loading, setLoading] = useState(true);
 
     const timeAgo = useTimeAgo(post?.created_at || "");
