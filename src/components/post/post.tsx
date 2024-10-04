@@ -1,6 +1,6 @@
 import React, {useRef, useState} from "react";
 import styles from "./post.module.css";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import likeImage from "../../assets/like.svg"
 import likeActiveImage from "../../assets/like-active.svg"
 import profileImage from "../../assets/profile.svg"
@@ -30,6 +30,8 @@ const Post: React.FC<PostProps> = (props) => {
 
     const {topic, tags, info, isLiked, id, created_at, author} = props;
 
+    const navigate = useNavigate();
+
     const formatedDate = useTimeAgo(created_at);
     const user = useSelector((state: RootState) => state.user.user);
     const isAuthor = author?.id === user?.id;
@@ -51,7 +53,7 @@ const Post: React.FC<PostProps> = (props) => {
             <Link to={`/posts/${id}`} className={styles.title}>{topic}</Link>
             <div className={styles.buttons_wrapper}>
                 {isAuthor ? <>
-                    <button>
+                    <button onClick={()=>{navigate(`/edit-post/${id}`)}}>
                         <div className={styles.button}>
                             <img className={styles.button__img} src={editImage} alt="like"/>
                         </div>

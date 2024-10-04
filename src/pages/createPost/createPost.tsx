@@ -42,7 +42,7 @@ const CreatePost: React.FC = () => {
             content: content,
             tags: tags.split(" "),
         }, {withCredentials: true}).then((res) => {
-            navigate(`/posts/${res.data.id}`, {replace: true});
+            navigate(`/posts/${res.data.id}`);
         }).catch((err) => {
             console.log(err.response)
         })
