@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Header from "../../components/header/header.tsx";
-import styles from "./profile.module.css";
+import styles from "./myProfile.module.css";
 import profileImage from "../../assets/profile.svg";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
@@ -10,7 +10,7 @@ import Post from "../../components/post/post.tsx";
 import axios from "axios";
 import {UserPostType, UserType} from "../../types/types.ts";
 
-const Profile: React.FC = () => {
+const MyProfile: React.FC = () => {
 
     const isAuthenticated = useAuth();
     const navigate = useNavigate();
@@ -45,7 +45,7 @@ const Profile: React.FC = () => {
             <Header/>
             {user ? <div className={styles.content}>
                 <div className={styles.profile_wrapper}>
-                    <img width={200} height={200} src={profileImage} alt="Profile" className={styles.profile__img}/>
+                    <img width={200} height={200} src={profileImage} alt="MyProfile" className={styles.profile__img}/>
                     <div className={styles.profile_info}>
                         <div className={styles.profile__name}>{user.username}</div>
                         <div className={styles.profile__desc}>
@@ -61,7 +61,7 @@ const Profile: React.FC = () => {
                             key={index}
                             topic={post.topic}
                             author={{username: user.username, id: post.user_id}}
-                            tags={["test", "test2", "test3"]}
+                            tags={post.tags}
                             info={{likes: 1000, views: 10000, comments: 100000}}
                             isLiked={true}
                             id={post.id}
@@ -74,4 +74,4 @@ const Profile: React.FC = () => {
     );
 };
 
-export default Profile;
+export default MyProfile;

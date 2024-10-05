@@ -4,7 +4,7 @@ import Error from "./pages/error/error.tsx";
 import CreatePost from "./pages/createPost/createPost.tsx";
 import Login from "./pages/login/login.tsx";
 import Register from "./pages/register/register.tsx";
-import Profile from "./pages/profile/profile.tsx";
+import MyProfile from "./pages/myProfile/myProfile.tsx";
 import PostPage from "./pages/post/postPage.tsx";
 import SearchPost from "./pages/searchPost/searchPost.tsx";
 import EditPost from "./pages/editPost/editPost.tsx";
@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/profile",
-        element: <Profile/>,
+        element: <MyProfile/>,
         errorElement: <Error/>
     },
     {
@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/profile/:id",
-        element: <Profile/>,
+        element: <MyProfile/>,
         errorElement: <Error/>
     },
     {
