@@ -53,9 +53,6 @@ const EditPost: React.FC = () => {
         if(content !== post?.content){
             editedPost.content = content;
         }
-        console.log(JSON.stringify(tags.split("")))
-        console.log(JSON.stringify(post?.tags))
-        console.log(JSON.stringify(tags.split(" ")) === JSON.stringify(post?.tags))
         if(JSON.stringify(tags.split(" ")) !== JSON.stringify(post?.tags)){
             editedPost.tags = tags.split(" ");
         }
@@ -71,7 +68,7 @@ const EditPost: React.FC = () => {
     const fetchPost = () => {
         axios.get<PostType>(`http://localhost:8000/api/posts/${id}`).then((res) => {
             setIsLoading(false);
-            if(user?.id !== res.data.id){
+            if(user?.id !== res.data.user.id){
                 navigate("/login")
                 return;
             }
@@ -86,6 +83,7 @@ const EditPost: React.FC = () => {
     }
 
     useEffect(() => {
+        console.log(1243)
         if (isLoading) {
             fetchPost()
         }
