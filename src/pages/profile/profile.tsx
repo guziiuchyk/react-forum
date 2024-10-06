@@ -5,15 +5,21 @@ import profileImage from "../../assets/profile.svg";
 import Post from "../../components/post/post.tsx";
 import {UserType} from "../../types/types.ts";
 import axios, {AxiosError} from "axios";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import NotFound from "../../components/notFound/notFound.tsx";
+import {useSelector} from "react-redux";
+import {RootState} from "../../redux/store.ts";
 
 const Profile: React.FC = () => {
+
+    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState<UserType | null>(null);
 
     const {id} = useParams();
+
+    const userId = useSelector((state: RootState) => state.user.user?.id);
 
     const fetchUser = () => {
         axios.get<UserType>(`http://localhost:8000/api/users/${id}`).then((res) => {
@@ -26,6 +32,9 @@ const Profile: React.FC = () => {
     }
 
     useEffect(() => {
+        if(Number(id) === userId){
+            navigate("/profile")
+        }
         if (isLoading) {
             fetchUser();
         }

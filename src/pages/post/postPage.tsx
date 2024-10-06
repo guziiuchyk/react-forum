@@ -66,7 +66,7 @@ const PostPage: React.FC = () => {
                                 <div className={styles.author}>
                                     <img src={profileImage} alt="" className={styles.author__img}/>
                                     <div className={styles.author__info}>
-                                        <Link className={styles.author__name} to={`/profiles/${post.user.id}`}>
+                                        <Link className={styles.author__name} to={`/profile/${post.user.id}`}>
                                             {post.user.username}
                                         </Link>
                                         <div className={styles.author__date}>{timeAgo}</div>
