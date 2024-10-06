@@ -8,6 +8,7 @@ import MyProfile from "./pages/myProfile/myProfile.tsx";
 import PostPage from "./pages/post/postPage.tsx";
 import SearchPost from "./pages/searchPost/searchPost.tsx";
 import EditPost from "./pages/editPost/editPost.tsx";
+import Profile from "./pages/profile/profile.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -47,7 +48,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/profile/:id",
-        element: <MyProfile/>,
+        element: <Profile/>,
         errorElement: <Error/>
     },
     {
