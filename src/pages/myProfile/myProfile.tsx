@@ -48,10 +48,7 @@ const MyProfile: React.FC = () => {
                     <img width={200} height={200} src={profileImage} alt="MyProfile" className={styles.profile__img}/>
                     <div className={styles.profile_info}>
                         <div className={styles.profile__name}>{user.username}</div>
-                        <div className={styles.profile__desc}>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci at et molestias quaerat
-                            unde vitae.
-                        </div>
+                        <div className={styles.profile__desc}>{user.bio}</div>
                     </div>
                 </div>
 

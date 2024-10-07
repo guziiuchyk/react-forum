@@ -38,7 +38,7 @@ const Post: React.FC<PostProps> = (props) => {
     const wrapperRef = useRef<HTMLDivElement | null>(null)
     const [isModalOpen, setModalOpen] = useState(false);
 
-    const deletePost = (id:number):void => {
+    const deletePost = (id:number) => {
         axios.delete(`http://localhost:8000/api/posts/${id}`, {withCredentials:true}).then(()=> {
             if(wrapperRef.current) {
                 wrapperRef.current.remove();
@@ -75,7 +75,7 @@ const Post: React.FC<PostProps> = (props) => {
             <div className={styles.author}>
                 <img className={styles.author__img} src={profileImage} alt="author"/>
                 <div className={styles.author_info}>
-                    <Link to={`/profile/${author.id}`} className={styles.author__name}>{author.username}</Link>
+                    <Link to={isAuthor ? "/profile" : `/profile/${author.id}`} className={styles.author__name}>{author.username}</Link>
                     <span className={styles.info__date}>{formatedDate}</span>
                 </div>
             </div>
