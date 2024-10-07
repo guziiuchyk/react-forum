@@ -11,22 +11,13 @@ export interface PostType {
     }
 }
 
-interface PostForUserType{
-    id: number;
-    topic:string;
-    content:string;
-    tags:string[];
-    created_at:string;
-    user_id:number;
-}
-
 export interface UserType {
     id: number;
     username: string;
     email: string;
     profile_picture:string;
     bio: string;
-    posts: PostForUserType[];
+    posts: UserPostType[];
 }
 
 export interface UserPostType{
