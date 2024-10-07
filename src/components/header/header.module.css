@@ -117,6 +117,10 @@
 
 }
 
+.profile img{
+    border-radius: 5px;
+}
+
 .profile__name {
     margin-left: 10px;
     font-size: 18px;

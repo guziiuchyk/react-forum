@@ -1,11 +1,13 @@
 import Header from "../../components/header/header.tsx";
 import styles from "./editProfile.module.css"
 import React, {useEffect, useRef, useState} from "react";
-import profileImage from "../../assets/profile.svg"
 import useAuth from "../../hooks/useAuth.ts";
 import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
+import axios from "axios";
+import {login} from "../../redux/slices/userSlice.ts";
+import {UserPostType, UserType} from "../../types/types.ts";
 
 const EditProfile: React.FC = () => {
 
@@ -17,6 +19,7 @@ const EditProfile: React.FC = () => {
     const user = useSelector((state: RootState) => state.user.user);
     const navigate = useNavigate();
     const isAuthenticated = useAuth();
+    const dispatch = useDispatch()
 
 
     const handleUploadFileButton = () => {
@@ -28,7 +31,6 @@ const EditProfile: React.FC = () => {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            console.log(file)
             setFile(file)
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -59,8 +61,29 @@ const EditProfile: React.FC = () => {
     }
 
     const handleConfirmButton = () => {
-        //AXIOS PATCH /api/my-profile
-        navigate("/profile");
+        console.log(file)
+        const formData = new FormData();
+        if (file) {
+            formData.append("profile_picture", file);
+        } else {
+            formData.append("profile_picture", "");
+        }
+        console.log(formData)
+        axios.patch<UserType>(`http://localhost:8000/api/my-profile?username=${name}&bio=${bio}`, formData , {
+            withCredentials: true, headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        }).then((response) => {
+            if (user) {
+                const newUser: UserType = {
+                    ...response.data,
+                    posts: user.posts as UserPostType[]
+                };
+                dispatch(login(newUser));
+                navigate("/profile");
+            }
+        })
+
     }
 
     return (<>
@@ -70,14 +93,15 @@ const EditProfile: React.FC = () => {
                 <button onClick={handleUploadFileButton} className={styles.upload_button}>
                     {imageSrc ? <img height={200} width={200} className={styles.editImage__image} src={imageSrc}
                                      alt="profile"/> :
-                        <img height={200} width={200} className={styles.editImage__image} src={profileImage}
+                        <img height={200} width={200} className={styles.editImage__image} src={user?.profile_picture}
                              alt="profile"/>}
                 </button>
                 <input onChange={handleFileChange} ref={fileInputRef} style={{display: "none"}} type="file"
                        accept="image/*"/>
                 <div className={styles.profile__info}>
                     <input onChange={handleChangeNameInput} type="text" value={name} className={styles.profile__name}/>
-                    <textarea onChange={handleChangeBioInput} value={bio} placeholder="Bio" className={styles.profile__bio}/>
+                    <textarea onChange={handleChangeBioInput} value={bio} placeholder="Bio"
+                              className={styles.profile__bio}/>
                 </div>
             </div>
             <div className={styles.buttons}>

@@ -5,7 +5,6 @@ import homeImage from "../../assets/home.svg";
 import messageImage from "../../assets/message.svg";
 import searchImage from "../../assets/search_icon.svg";
 import notificationImage from "../../assets/notification.svg";
-import profileImage from "../../assets/profile.svg";
 import groupImage from "../../assets/group.svg";
 import aboutUsImg from "../../assets/about-us.svg";
 import expandArrow from "../../assets/expand-arrow.svg"
@@ -109,7 +108,7 @@ const Header: React.FC = () => {
                         <img src={messageImage} alt="messages link"/>
                     </Link>
                     <div className={`${styles.profile} ${isActive ? styles.active : ""}`}>
-                        <img className={styles.profile__img} src={profileImage} alt="profile"/>
+                        <img width={36} height={36} className={styles.profile__img} src={user?.profile_picture} alt="profile"/>
                         <Link to={"/profile"} className={styles.profile__name}>
                             {user?.username}
                         </Link>

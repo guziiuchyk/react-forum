@@ -22,3 +22,6 @@
 .profile__desc{
     font-size: 18px;
 }
+.profile__img{
+    border-radius: 10px;
+}

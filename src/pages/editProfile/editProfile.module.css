@@ -52,3 +52,6 @@
 .confirm{
     background-color: var(--accent-color);
 }
+.editImage__image{
+    border-radius: 10px
+}

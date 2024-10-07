@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Header from "../../components/header/header.tsx";
 import styles from "./myProfile.module.css";
-import profileImage from "../../assets/profile.svg";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
 import useAuth from "../../hooks/useAuth.ts";
@@ -45,7 +44,7 @@ const MyProfile: React.FC = () => {
             <Header/>
             {user ? <div className={styles.content}>
                 <div className={styles.profile_wrapper}>
-                    <img width={200} height={200} src={profileImage} alt="MyProfile" className={styles.profile__img}/>
+                    <img width={200} height={200} src={user.profile_picture} alt="MyProfile" className={styles.profile__img}/>
                     <div className={styles.profile_info}>
                         <div className={styles.profile__name}>{user.username}</div>
                         <div className={styles.profile__desc}>{user.bio}</div>

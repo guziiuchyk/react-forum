@@ -9,6 +9,7 @@
 .img{
     width: 54px;
     height: 54px;
+    border-radius: 5px
 }
 
 .text{
