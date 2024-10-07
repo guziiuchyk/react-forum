@@ -88,6 +88,7 @@
 
 .profile_wrapper {
     display: flex;
+    align-items: center;
 }
 
 .profile__link {
@@ -111,8 +112,8 @@
     align-items: center;
     position: relative;
     padding: 12px 12px 0 12px;
-    box-sizing: border-box;
     border-radius: 5px 5px 0 0;
+
 }
 
 .profile__name {

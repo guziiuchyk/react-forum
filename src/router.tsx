@@ -9,6 +9,7 @@ import PostPage from "./pages/post/postPage.tsx";
 import SearchPost from "./pages/searchPost/searchPost.tsx";
 import EditPost from "./pages/editPost/editPost.tsx";
 import Profile from "./pages/profile/profile.tsx";
+import EditProfile from "./pages/editProfile/editProfile.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -54,6 +55,11 @@ export const router = createBrowserRouter([
     {
         path: "/edit-post/:id",
         element: <EditPost/>,
+        errorElement: <Error/>
+    },
+    {
+        path: "/edit-profile",
+        element: <EditProfile/>,
         errorElement: <Error/>
     }
 ]);

@@ -117,7 +117,7 @@ const Header: React.FC = () => {
                             className={styles.profile__pop_up__img} src={expandArrow} alt="expand arrow"/></button>
                         <div className={styles.pop_up_wrapper}>
                             <div className={styles.line}></div>
-                            <Link to={"#"}>Edit profile</Link>
+                            <Link to={"/edit-profile"}>Edit profile</Link>
                             <Link to={"#"}>Settings</Link>
                             <button onClick={handleLogoutButton}>Logout</button>
                         </div>

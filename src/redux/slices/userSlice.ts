@@ -4,6 +4,7 @@ interface UserState {
     username: string;
     id: number;
     email: string;
+    bio: string | null;
     posts: object[]
 }
 
