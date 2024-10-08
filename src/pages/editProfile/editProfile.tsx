@@ -61,14 +61,12 @@ const EditProfile: React.FC = () => {
     }
 
     const handleConfirmButton = () => {
-        console.log(file)
         const formData = new FormData();
         if (file) {
             formData.append("profile_picture", file);
         } else {
             formData.append("profile_picture", "");
         }
-        console.log(formData)
         axios.patch<UserType>(`http://localhost:8000/api/my-profile?username=${name}&bio=${bio}`, formData , {
             withCredentials: true, headers: {
                 "Content-Type": "multipart/form-data",

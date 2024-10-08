@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Header from "../../components/header/header.tsx";
 import styles from "./postPage.module.css";
-import profileImage from "../../assets/profile.svg";
 import likeActiveImage from "../../assets/like-active.svg";
 import likeImage from "../../assets/like.svg";
 import {Link, useParams} from "react-router-dom";
@@ -64,7 +63,7 @@ const PostPage: React.FC = () => {
                             <div className={styles.line}/>
                             <div className={styles.post_footer}>
                                 <div className={styles.author}>
-                                    <img src={profileImage} alt="" className={styles.author__img}/>
+                                    <img src={post.user.profile_picture} alt="" className={styles.author__img}/>
                                     <div className={styles.author__info}>
                                         <Link className={styles.author__name} to={`/profile/${post.user.id}`}>
                                             {post.user.username}

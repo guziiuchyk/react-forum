@@ -7,7 +7,8 @@ export interface PostType {
     "user": {
         "id": number,
         "username": string,
-        "email": string
+        "email": string,
+        "profile_picture": string,
     }
 }
 

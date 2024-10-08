@@ -56,7 +56,7 @@ const MyProfile: React.FC = () => {
                         <Post
                             key={index}
                             topic={post.topic}
-                            author={{username: user.username, id: post.user_id}}
+                            author={{username: user.username, id: post.user_id, profile_picture:user.profile_picture}}
                             tags={post.tags}
                             info={{likes: 1000, views: 10000, comments: 100000}}
                             isLiked={true}

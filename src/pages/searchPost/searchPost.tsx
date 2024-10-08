@@ -37,7 +37,7 @@ const SearchPost: React.FC = () => {
                 {isLoading ? <div>Loading...</div> : posts ? posts.map((post: PostType, index) => <Post
                     key={index}
                     topic={post.topic}
-                    author={{username: post.user.username, id: post.user.id}}
+                    author={{username: post.user.username, id: post.user.id, profile_picture:post.user.profile_picture}}
                     tags={["test", "test2", "test3"]}
                     info={{likes: 1000, views: 10000, comments: 100000}}
                     isLiked={true}

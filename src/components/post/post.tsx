@@ -3,7 +3,7 @@ import styles from "./post.module.css";
 import {Link, useNavigate} from "react-router-dom";
 import likeImage from "../../assets/like.svg"
 import likeActiveImage from "../../assets/like-active.svg"
-import profileImage from "../../assets/profile.svg"
+
 import removeImage from "../../assets/remove.svg"
 import editImage from "../../assets/edit.svg"
 import useTimeAgo from "../../hooks/useTimeAgo.ts";
@@ -22,7 +22,8 @@ interface PostProps {
     info: { views: number, comments: number, likes: number },
     author: {
         username: string,
-        id: number
+        id: number,
+        profile_picture: string
     }
 }
 
@@ -73,7 +74,7 @@ const Post: React.FC<PostProps> = (props) => {
                 {tags?.map(tag => (<Tag key={tag} tag={tag}/>))}
             </div>
             <div className={styles.author}>
-                <img className={styles.author__img} src={profileImage} alt="author"/>
+                <img className={styles.author__img} src={author.profile_picture} alt="author"/>
                 <div className={styles.author_info}>
                     <Link to={isAuthor ? "/profile" : `/profile/${author.id}`} className={styles.author__name}>{author.username}</Link>
                     <span className={styles.info__date}>{formatedDate}</span>
