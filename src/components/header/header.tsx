@@ -25,39 +25,42 @@ const Header: React.FC = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const [isActive, setIsActive] = useState(false);
+    const popUpRef = useRef<HTMLDivElement>(null);
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
         dispatch(setSearchValue(e.target.value));
         if (location.pathname !== "/search-posts" && e.target.value !== "") {
-            navigate("/search-posts");
+            navigate("/search-posts", {state: {focus: true}});
             return
         }
         if (e.target.value === "") {
-            navigate("/");
+            dispatch(setSearchValue(""));
+            navigate("/", {state: {focus: true}});
         }
     };
 
     useEffect(() => {
-        if (location.pathname === "/search-posts") {
+
+        if (location.state?.focus) {
+            navigate(location.pathname, {replace: true, state: {focus: false}});
             inputRef.current?.focus();
-        } else {
-            dispatch(setSearchValue(""));
         }
+
+        const handleClickOutside = (e: MouseEvent) => {
+            if (popUpRef.current && !popUpRef.current.contains(e.target as Node)) {
+                setIsActive(false);
+            }
+        };
+
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         }
-    }, [location.pathname, searchText, navigate, dispatch]);
+    });
 
     const handlePopUpButton = () => {
         setIsActive(!isActive);
     }
-
-    const handleClickOutside = () => {
-        if (isActive) {
-            setIsActive(false);
-        }
-    };
 
     const handleLogoutButton = () => {
         axios.post("http://localhost:8000/api/logout", {}, {withCredentials: true}).then(() => {
@@ -107,8 +110,9 @@ const Header: React.FC = () => {
                     <Link to={"/"} className={styles.profile__link}>
                         <img src={messageImage} alt="messages link"/>
                     </Link>
-                    <div className={`${styles.profile} ${isActive ? styles.active : ""}`}>
-                        <img width={36} height={36} className={styles.profile__img} src={user?.profile_picture} alt="profile"/>
+                    <div ref={popUpRef} className={`${styles.profile} ${isActive ? styles.active : ""}`}>
+                        <img width={36} height={36} className={styles.profile__img} src={user?.profile_picture}
+                             alt="profile"/>
                         <Link to={"/profile"} className={styles.profile__name}>
                             {user?.username}
                         </Link>

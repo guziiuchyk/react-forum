@@ -10,18 +10,48 @@ const Home: React.FC = () => {
 
     const [posts, setPosts] = useState<PostType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [fetching, setFetching] = useState(true);
 
     useEffect(() => {
         const fetchPosts = (): void => {
+            axios.get(`http://localhost:8000/api/posts?page_size=5&page=${currentPage}`).then((res) => {
+                setPosts((prevPosts) => [...prevPosts, ...res.data]);
+                setCurrentPage(prevState => prevState + 1);
+                setIsLoading(false);
+            }).finally(() => setFetching(false));
+        }
+        if(fetching){
+            fetchPosts()
+        }
+    }, [currentPage, fetching]);
 
-            axios.get("http://localhost:8000/api/posts").then((res) => {
+    /*
+    useEffect(() => {
+        const fetchPosts = (): void => {
+
+            axios.get("http://localhost:8000/api/posts?page_size=5").then((res) => {
                 setIsLoading(false);
                 setPosts(res.data);
             })
         }
         fetchPosts()
+    }, []); */
+
+    useEffect(() => {
+        document.addEventListener("scroll", handleScroll);
+        return () => {
+            document.removeEventListener("scroll", handleScroll);
+        }
     }, []);
 
+    const handleScroll = (e:Event) => {
+        const target = e.target as Document;
+        if(target.documentElement.scrollHeight - (target.documentElement.scrollTop + window.innerHeight) < 200){
+            console.log("scroll");
+            setFetching(true);
+        }
+    }
 
     return (
         <>
