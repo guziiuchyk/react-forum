@@ -40,12 +40,13 @@ const Header: React.FC = () => {
     };
 
     useEffect(() => {
-
         if (location.state?.focus) {
             navigate(location.pathname, {replace: true, state: {focus: false}});
             inputRef.current?.focus();
         }
-
+    }, [location.pathname, location.state?.focus, navigate]);
+    
+    useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (popUpRef.current && !popUpRef.current.contains(e.target as Node)) {
                 setIsActive(false);
