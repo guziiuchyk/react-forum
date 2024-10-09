@@ -16,7 +16,7 @@ const AboutUs:React.FC = () =>{
                 <div className={styles.team}>
                     <div className={styles.title}>Our Team</div>
                     <div><strong>Nazar:</strong> Front-end Developer</div>
-                    <div><strong>Maxim:</strong> Back-end Developer</div>
+                    <div><strong>Maksim:</strong> Back-end Developer</div>
                 </div>
 
                 <div className={styles.project_info}>

@@ -38,7 +38,7 @@ const MyProfile: React.FC = () => {
         if (isLoading) {
             fetchPosts()
         }
-    })
+    }, [isAuthenticated, user, navigate, isLoading])
 
     return (
         <>

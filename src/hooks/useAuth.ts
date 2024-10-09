@@ -13,10 +13,7 @@ const useAuth = (): boolean => {
 
         const checkAuthentication = async (): Promise<void> => {
             try {
-                await axios.get("http://localhost:8000/api/is-authenticated", { withCredentials: true });
-
                 const profile = await axios.get("http://localhost:8000/api/my-profile", { withCredentials: true });
-
                 dispatch(login(profile.data));
             } catch {
                 console.log("Not authenticated");
