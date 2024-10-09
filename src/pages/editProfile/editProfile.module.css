@@ -1,4 +1,4 @@
-.wrapper{
+.wrapper {
     width: 70%;
     margin: 20px auto;
     background-color: var(--primary-color);
@@ -6,29 +6,35 @@
     padding: 20px;
     box-sizing: border-box;
 }
-.profile{
+
+.profile {
     display: flex;
 }
-.profile__info{
+
+.profile__info {
     margin: 20px;
     display: flex;
     flex-direction: column;
     width: 100%;
 }
-.profile__name{
+
+.profile__name {
     font-size: 22px;
     margin-bottom: 10px;
     padding: 5px;
     border-radius: 5px;
     border: 1px solid transparent;
 }
-.profile__name:focus{
+
+.profile__name:focus {
     border-color: white;
 }
-.profile__bio:focus{
+
+.profile__bio:focus {
     border-color: white;
 }
-.profile__bio{
+
+.profile__bio {
     font-size: 18px;
     padding: 5px;
     border-radius: 5px;
@@ -36,22 +42,31 @@
     width: 100%;
     height: 100px;
 }
-.buttons{
+
+.buttons {
     display: flex;
     justify-content: flex-end;
 }
-.buttons button{
+
+.buttons button {
     padding: 5px 10px;
     margin: 0 5px;
     border-radius: 5px;
 }
-.cancel{
+
+.cancel {
     background-color: var(--ui-elements-color);
 }
 
-.confirm{
+.confirm {
     background-color: var(--accent-color);
 }
-.editImage__image{
+
+.editImage__image {
     border-radius: 10px
+}
+
+.error {
+    margin: 5px 0;
+    color: red;
 }

@@ -16,6 +16,7 @@ const EditProfile: React.FC = () => {
     const [imageSrc, setImageSrc] = useState<string | null>(null);
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
+    const [error, setError] = useState("");
     const user = useSelector((state: RootState) => state.user.user);
     const navigate = useNavigate();
     const isAuthenticated = useAuth();
@@ -61,13 +62,37 @@ const EditProfile: React.FC = () => {
     }
 
     const handleConfirmButton = () => {
+        setError("")
         const formData = new FormData();
         if (file) {
             formData.append("profile_picture", file);
         } else {
             formData.append("profile_picture", "");
         }
-        axios.patch<UserType>(`http://localhost:8000/api/my-profile?username=${name}&bio=${bio}`, formData , {
+
+        let queryString = "";
+
+        if (name !== user?.username) {
+            if (name.length < 3 || name.length > 20) {
+                setError("Username must be between 3 and 20 characters");
+                return;
+            }
+            queryString += `&name=${encodeURIComponent(name)}`;
+        }
+        if (bio !== user?.bio) {
+            if (bio.length > 200) {
+                setError("Bio must be less than 200 characters");
+                return;
+            }
+            queryString += `&bio=${encodeURIComponent(bio)}`;
+        }
+
+        if (formData.get("profile_picture") === "" && queryString === "") {
+            navigate("/profile");
+            return;
+        }
+
+        axios.patch<UserType>(`http://localhost:8000/api/my-profile?${queryString}`, formData, {
             withCredentials: true, headers: {
                 "Content-Type": "multipart/form-data",
             }
@@ -80,6 +105,8 @@ const EditProfile: React.FC = () => {
                 dispatch(login(newUser));
                 navigate("/profile");
             }
+        }).catch(() => {
+            setError("Incorrect data");
         })
 
     }
@@ -87,6 +114,7 @@ const EditProfile: React.FC = () => {
     return (<>
         <Header/>
         <div className={styles.wrapper}>
+            {error ? <div className={styles.error}>{error}</div> : null}
             <div className={styles.profile}>
                 <button onClick={handleUploadFileButton} className={styles.upload_button}>
                     {imageSrc ? <img height={200} width={200} className={styles.editImage__image} src={imageSrc}
