@@ -16,13 +16,14 @@ const MyProfile: React.FC = () => {
     const [posts, setPosts] = useState<UserPostType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    if (!isAuthenticated) {
-        navigate("/login");
-    }
-
     const user = useSelector((state: RootState) => state.user.user as UserType | null);
 
     useEffect(() => {
+
+        if (!isAuthenticated) {
+            navigate("/login");
+        }
+
         const fetchPosts = () => {
             if (user) {
                 axios.get(`http://localhost:8000/api/my-profile`, {withCredentials:true}).then((res) => {
