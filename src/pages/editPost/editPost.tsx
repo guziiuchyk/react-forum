@@ -2,11 +2,12 @@ import React, {useEffect, useState} from "react";
 import Header from "../../components/header/header.tsx";
 import styles from "./editPost.module.css"
 import {useNavigate, useParams} from "react-router-dom";
-import {PostType} from "../../types/types.ts";
+import {GetApiPaginationPosts, PostType} from "../../types/types.ts";
 import axios, {AxiosError} from "axios";
 import NotFound from "../../components/notFound/notFound.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
+import useAuth from "../../hooks/useAuth.ts";
 
 type editedPostType = {
     topic?: string,
@@ -20,7 +21,9 @@ const EditPost: React.FC = () => {
 
     const {id} = useParams();
     const user = useSelector((state: RootState) => state.user.user);
-
+    
+    const isAuth = useAuth()
+    
     const [post, setPost] = useState<PostType | null>(null)
     const [isLoading, setIsLoading] = useState(true);
     const [topic, setTopic] = useState("");
@@ -64,30 +67,38 @@ const EditPost: React.FC = () => {
             navigate(`/posts/${id}`)
         })
     }
-
-    const fetchPost = () => {
-        axios.get<PostType>(`http://localhost:8000/api/posts/${id}`).then((res) => {
-            setIsLoading(false);
-            if(user?.id !== res.data.user.id){
-                navigate("/login")
-                return;
-            }
-            setPost(res.data);
-            setTopic(res.data.topic);
-            setContent(res.data.content);
-            setTags(res.data.tags.join(" "))
-        }).catch((err: AxiosError) => {
-            console.log(err.status)
-            setIsLoading(false);
-        })
-    }
+    
 
     useEffect(() => {
-        console.log(1243)
-        if (isLoading) {
+
+        const fetchPost = () => {
+            axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/posts/${id}`).then((res) => {
+                setIsLoading(false);
+                const post = res.data.items[0]
+                if(user?.id !== post.user.id){
+                    navigate("/login")
+                    return;
+                }
+
+                setPost(post);
+                setTopic(post.topic);
+                setContent(post.content);
+                setTags(post.tags.join(" "))
+            }).catch((err: AxiosError) => {
+                console.log(err.status)
+                setIsLoading(false);
+            })
+        }
+
+        if (isAuth === false){
+            navigate("/login")
+            return
+        }
+
+        if (isLoading && isAuth === true) {
             fetchPost()
         }
-    })
+    }, [id, isAuth, isLoading, navigate, user?.id])
 
     return (
         <>

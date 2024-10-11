@@ -10,12 +10,12 @@ interface UserState {
 }
 
 interface AuthState {
-    isAuthenticated: boolean;
+    isAuthenticated: boolean | null;
     user: null | UserState;
 }
 
 const initialState: AuthState = {
-    isAuthenticated: false,
+    isAuthenticated: null,
     user: null,
 };
 
@@ -31,8 +31,11 @@ const userSlice = createSlice({
             state.isAuthenticated = false;
             state.user = null;
         },
+        notAuthorized(state){
+            state.isAuthenticated = false;
+        }
     },
 });
 
-export const { login, logout} = userSlice.actions;
+export const {login, logout, notAuthorized} = userSlice.actions;
 export default userSlice.reducer;

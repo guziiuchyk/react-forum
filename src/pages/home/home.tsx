@@ -4,7 +4,7 @@ import CreatePost from "./createPost/createPost.tsx";
 import styles from "./home.module.css";
 import Post from "../../components/post/post.tsx";
 import axios from "axios";
-import {PostType} from "../../types/types.ts";
+import {GetApiPaginationPosts, PostType} from "../../types/types.ts";
 
 const Home: React.FC = () => {
 
@@ -16,14 +16,14 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         const fetchPosts = (): void => {
-            axios.get(`http://localhost:8000/api/posts?page_size=5&page=${currentPage}`, {withCredentials: true})
+            axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/posts?size=5&page=${currentPage}`, {withCredentials: true})
                 .then((res) => {
                     if (currentPage === 1) {
-                        setPosts(res.data);
+                        setPosts(res.data.items);
                     } else {
-                        setPosts((prevPosts) => [...prevPosts, ...res.data]);
+                        setPosts((prevPosts) => [...prevPosts, ...res.data.items]);
                     }
-                    setTotalCount(res.headers["x-all-posts-count"]);
+                    setTotalCount(res.data.total);
                 })
                 .finally(() => {
                     setIsLoading(false);
@@ -71,8 +71,8 @@ const Home: React.FC = () => {
                                 profile_picture: post.user.profile_picture,
                             }}
                             tags={post.tags}
-                            info={{likes: 1000, views: 10000, comments: 100000}}
-                            isLiked={true}
+                            info={{likes: post.likes_count, views: 10000, comments: 100000}}
+                            isLiked={post.is_liked}
                             id={post.id}
                             created_at={post.created_at}
                         />

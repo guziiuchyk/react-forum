@@ -34,6 +34,7 @@ const Login: React.FC = () => {
             withCredentials: true
         }).then(() => {
             axios.get("http://localhost:8000/api/my-profile", {withCredentials:true}).then((res) => {
+                localStorage.setItem("isAuthenticated", "true");
                 dispatch(login(res.data));
                 navigate("/profile");
             })

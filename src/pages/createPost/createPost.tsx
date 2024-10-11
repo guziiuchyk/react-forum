@@ -16,8 +16,8 @@ const CreatePost: React.FC = () => {
 
     const isAuthenticated = useAuth();
     useEffect(() => {
-        if (!isAuthenticated) {
-            navigate("/login", {replace: true});
+        if (isAuthenticated === false) {
+            navigate("/login");
         }
         if (location.state && location.state.topic) {
             setTopic(location.state.topic);

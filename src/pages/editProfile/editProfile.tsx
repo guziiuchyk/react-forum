@@ -22,7 +22,6 @@ const EditProfile: React.FC = () => {
     const isAuthenticated = useAuth();
     const dispatch = useDispatch()
 
-
     const handleUploadFileButton = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
@@ -43,7 +42,7 @@ const EditProfile: React.FC = () => {
     };
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        if (isAuthenticated === false) {
             navigate("/login");
             return
         }
@@ -73,7 +72,7 @@ const EditProfile: React.FC = () => {
         let queryString = "";
 
         if (name !== user?.username) {
-            if (name.length < 3 || name.length > 20) {
+            if (name.length < 2 || name.length > 20) {
                 setError("Username must be between 3 and 20 characters");
                 return;
             }

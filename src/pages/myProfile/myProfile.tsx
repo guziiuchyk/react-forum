@@ -20,32 +20,31 @@ const MyProfile: React.FC = () => {
 
     useEffect(() => {
 
-        if (!isAuthenticated) {
+        if (isAuthenticated === false) {
             navigate("/login");
         }
 
         const fetchPosts = () => {
-            if (user) {
-                axios.get(`http://localhost:8000/api/my-profile`, {withCredentials:true}).then((res) => {
-                    setPosts(res.data.posts);
-                    setIsLoading(false);
-                }).catch((err) => {
-                    console.log(err)
-                    setIsLoading(false);
-                })
-            }
+            axios.get(`http://localhost:8000/api/my-profile`, {withCredentials: true}).then((res) => {
+                setPosts(res.data.posts);
+                setIsLoading(false);
+            }).catch((err) => {
+                console.log(err)
+                setIsLoading(false);
+            })
         }
-        if (isLoading) {
+        if (isLoading && isAuthenticated) {
             fetchPosts()
         }
-    }, [isAuthenticated, user, navigate, isLoading])
+    }, [isAuthenticated, navigate, isLoading])
 
     return (
         <>
             <Header/>
             {user ? <div className={styles.content}>
                 <div className={styles.profile_wrapper}>
-                    <img width={200} height={200} src={user.profile_picture} alt="MyProfile" className={styles.profile__img}/>
+                    <img width={200} height={200} src={user.profile_picture} alt="MyProfile"
+                         className={styles.profile__img}/>
                     <div className={styles.profile_info}>
                         <div className={styles.profile__name}>{user.username}</div>
                         <div className={styles.profile__desc}>{user.bio}</div>
@@ -57,7 +56,7 @@ const MyProfile: React.FC = () => {
                         <Post
                             key={index}
                             topic={post.topic}
-                            author={{username: user.username, id: post.user_id, profile_picture:user.profile_picture}}
+                            author={{username: user.username, id: post.user_id, profile_picture: user.profile_picture}}
                             tags={post.tags}
                             info={{likes: 1000, views: 10000, comments: 100000}}
                             isLiked={true}

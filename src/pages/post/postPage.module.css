@@ -7,22 +7,26 @@
     position: relative;
 }
 
-.like {
+.nav__button {
     background-color: var(--ui-elements-color);
-    padding: 5px;
+    padding: 24px;
     border-radius: 50%;
     width: 36px;
     height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 5px;
+}
+
+.nav{
     position: absolute;
     right: 50px;
     top: 35px;
-
+    display: flex;
 }
 
-.like__img {
+.nav__button__img {
     width: 30px;
     height: 30px;
 }

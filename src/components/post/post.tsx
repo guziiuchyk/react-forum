@@ -81,9 +81,9 @@ const Post: React.FC<PostProps> = (props) => {
                 </div>
             </div>
             <div className={styles.info}>
-                <span className={styles.info__element}>{info.views}</span>
-                <span className={styles.info__element}>{info.likes}</span>
-                <span className={styles.info__element}>{info.comments}</span>
+                <span className={styles.info__element}>{info.views} views</span>
+                <span className={styles.info__element}>{info.likes} likes</span>
+                <span className={styles.info__element}>{info.comments} comments</span>
             </div>
             <ConfirmationModal
                 text={"Are you sure you want to delete this post?"}
