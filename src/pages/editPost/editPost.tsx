@@ -9,12 +9,6 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
 import useAuth from "../../hooks/useAuth.ts";
 
-type editedPostType = {
-    topic?: string,
-    content?: string,
-    tags?: string[],
-}
-
 const EditPost: React.FC = () => {
 
     const navigate = useNavigate();
@@ -44,26 +38,26 @@ const EditPost: React.FC = () => {
     }
 
     const patchPost = () => {
-        const editedPost:editedPostType = {
-            topic:"",
-            content:"",
-            tags:[]
-        }
+        let queryString = "";
 
         if(topic !== post?.topic){
-            editedPost.topic = topic;
+            queryString += `&topic=${encodeURIComponent(topic)}`;
         }
+
         if(content !== post?.content){
-            editedPost.content = content;
+            queryString += `&content=${encodeURIComponent(content)}`;
         }
+
         if(JSON.stringify(tags.split(" ")) !== JSON.stringify(post?.tags)){
-            editedPost.tags = tags.split(" ");
+            queryString += `&tags=${encodeURIComponent(tags.split(" ").join(", "))}`;
         }
-        if (editedPost.tags?.length === 0 && editedPost.content === "" && editedPost.topic === ""){
+
+        if (queryString.length === 0){
             setError("You didn't change anything");
             return;
         }
-        axios.patch(`http://localhost:8000/api/posts/${id}`,{...editedPost},{withCredentials:true}).then(() => {
+
+        axios.patch(`http://localhost:8000/api/posts/${id}?${queryString}`,{},{withCredentials:true}).then(() => {
             navigate(`/posts/${id}`)
         })
     }
