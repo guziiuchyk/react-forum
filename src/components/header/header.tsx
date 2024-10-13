@@ -122,7 +122,7 @@ const Header: React.FC = () => {
                         <div className={styles.pop_up_wrapper}>
                             <div className={styles.line}></div>
                             <Link to={"/edit-profile"}>Edit profile</Link>
-                            <Link to={"#"}>Settings</Link>
+                            <Link to={"/settings"}>Settings</Link>
                             <button onClick={handleLogoutButton}>Logout</button>
                         </div>
                     </div>

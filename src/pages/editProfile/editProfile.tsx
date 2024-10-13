@@ -78,6 +78,7 @@ const EditProfile: React.FC = () => {
             }
             queryString += `&name=${encodeURIComponent(name)}`;
         }
+
         if (bio !== user?.bio) {
             if (bio.length > 200) {
                 setError("Bio must be less than 200 characters");
@@ -110,35 +111,38 @@ const EditProfile: React.FC = () => {
 
     }
 
-    return (<>
-        <Header/>
-        <div className={styles.wrapper}>
-            {error ? <div className={styles.error}>{error}</div> : null}
-            <div className={styles.profile}>
-                <button onClick={handleUploadFileButton} className={styles.upload_button}>
-                    {imageSrc ? <img height={200} width={200} className={styles.editImage__image} src={imageSrc}
-                                     alt="profile"/> :
-                        <img height={200} width={200} className={styles.editImage__image} src={user?.profile_picture}
-                             alt="profile"/>}
-                </button>
-                <input onChange={handleFileChange} ref={fileInputRef} style={{display: "none"}} type="file"
-                       accept="image/*"/>
-                <div className={styles.profile__info}>
-                    <input onChange={handleChangeNameInput} type="text" value={name} className={styles.profile__name}/>
-                    <textarea onChange={handleChangeBioInput} value={bio} placeholder="Bio"
-                              className={styles.profile__bio}/>
+    return (
+        <>
+            <Header/>
+            <div className={styles.wrapper}>
+                {error ? <div className={styles.error}>{error}</div> : null}
+                <div className={styles.profile}>
+                    <button onClick={handleUploadFileButton} className={styles.upload_button}>
+                        {imageSrc ? <img height={200} width={200} className={styles.editImage__image} src={imageSrc}
+                                         alt="profile"/> :
+                            <img height={200} width={200} className={styles.editImage__image}
+                                 src={user?.profile_picture}
+                                 alt="profile"/>}
+                    </button>
+                    <input onChange={handleFileChange} ref={fileInputRef} style={{display: "none"}} type="file"
+                           accept="image/*"/>
+                    <div className={styles.profile__info}>
+                        <input onChange={handleChangeNameInput} type="text" value={name}
+                               className={styles.profile__name}/>
+                        <textarea onChange={handleChangeBioInput} value={bio} placeholder="Bio"
+                                  className={styles.profile__bio}/>
+                    </div>
+                </div>
+                <div className={styles.buttons}>
+                    <button onClick={() => {
+                        navigate(-1)
+                    }} className={styles.cancel}>Cancel
+                    </button>
+                    <button onClick={handleConfirmButton} className={styles.confirm}>Save</button>
                 </div>
             </div>
-            <div className={styles.buttons}>
-                <button onClick={() => {
-                    navigate(-1)
-                }} className={styles.cancel}>Cancel
-                </button>
-                <button onClick={handleConfirmButton} className={styles.confirm}>Save</button>
-            </div>
-        </div>
-
-    </>)
+        </>
+    )
 }
 
 export default EditProfile

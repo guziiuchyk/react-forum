@@ -14,6 +14,16 @@ export interface PostType {
     }
 }
 
+export interface CommentType {
+    id: number;
+    user_id: number;
+    user_email: string;
+    username: string;
+    profile_picture: string;
+    content: string;
+    created_at: string;
+}
+
 export interface UserType {
     id: number;
     username: string;

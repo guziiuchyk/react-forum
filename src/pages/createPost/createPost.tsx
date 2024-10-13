@@ -6,7 +6,6 @@ import useAuth from "../../hooks/useAuth.ts";
 import axios from "axios";
 
 const CreatePost: React.FC = () => {
-
     const [topic, setTopic] = useState("");
     const [content, setContent] = useState("");
     const [tags, setTags] = useState("");

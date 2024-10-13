@@ -11,6 +11,7 @@ import EditPost from "./pages/editPost/editPost.tsx";
 import Profile from "./pages/profile/profile.tsx";
 import EditProfile from "./pages/editProfile/editProfile.tsx";
 import AboutUs from "./pages/aboutUs/aboutUs.tsx";
+import Settings from "./pages/settings/settings.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -66,6 +67,11 @@ export const router = createBrowserRouter([
     {
         path: "/about-us",
         element: <AboutUs/>,
+        errorElement: <Error/>
+    },
+    {
+        path: "/settings",
+        element: <Settings/>,
         errorElement: <Error/>
     }
 ]);

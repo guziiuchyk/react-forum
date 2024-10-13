@@ -71,3 +71,34 @@
 .tags{
     margin: 10px 0;
 }
+
+.chat_container {
+    width: 70%;
+    height: 500px;
+    background-color: var(--primary-color);
+    padding: 20px 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: scroll;
+    margin: 0 auto;
+}
+
+.send_message {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.send_message__input{
+    width: 90%;
+    background-color: var(--ui-elements-color);
+    border-radius: 10px;
+    padding: 10px;
+}
+.send_message__button{
+    width: 9%;
+    background-color: var(--accent-color);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}

@@ -9,11 +9,17 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import NotFound from "../../components/notFound/notFound.tsx";
 import useTimeAgo from "../../hooks/useTimeAgo.ts";
-import {GetApiPaginationPosts, PostType} from "../../types/types.ts";
+import {CommentType, GetApiPaginationPosts, PostType} from "../../types/types.ts";
 import Tag from "../../components/post/tag/tag.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
 import ConfirmationModal from "../../components/confirmationModal/confirmationModal.tsx";
+import Comment from "./comment/comment.tsx";
+import useAuth from "../../hooks/useAuth.ts";
+
+interface GetOldCommentsType {
+    comments: CommentType[];
+}
 
 const PostPage: React.FC = () => {
     const {id} = useParams();
@@ -21,6 +27,9 @@ const PostPage: React.FC = () => {
     const [post, setPost] = useState<PostType | null>(null);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [comments, setComments] = useState<CommentType[]>([]);
+    const [socket, setSocket] = useState<WebSocket | null>(null);
+    const [inputText, setInputText] = useState("");
 
     const timeAgo = useTimeAgo(post?.created_at || "");
 
@@ -28,27 +37,60 @@ const PostPage: React.FC = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchPost = async (): Promise<void> => {
-            try {
-                const res = await axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/posts/${id}`);
-                setPost(res.data.items[0]);
-                setLoading(false);
-            } catch {
-                setLoading(false);
-            }
-        };
-        if (loading) {
-            fetchPost();
-        }
-    }, [loading, id]);
+    const isAuth = useAuth();
 
+    useEffect(() => {
+            const fetchPost = () => {
+                axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/posts/${id}`).then((res) => {
+                    setPost(res.data.items[0]);
+                    setLoading(false);
+                }).catch(() => {
+                    setLoading(false);
+                })
+            };
+            if (loading) {
+                fetchPost();
+            }
+        },
+        [loading, id]);
+
+    useEffect(() => {
+        const fetchComments = () => {
+            axios.get<GetOldCommentsType>(`http://localhost:8000/api/posts/${id}/all-comments?response_type=json`).then((res) => {
+                setComments(res.data.comments)
+            })
+        }
+        fetchComments();
+    }, [id]);
+
+    useEffect(() => {
+            const socket = new WebSocket(`ws://localhost:8000/ws/1`);
+            socket.onmessage = (e: MessageEvent<string>) => {
+                console.log(e)
+                const comment = JSON.parse(e.data) as CommentType
+                setComments(prevComments => [...prevComments, comment]);
+            }
+            setSocket(socket)
+        return () => {
+            socket.close();
+        }
+    }, [id]);
     const deletePost = () => {
-        axios.delete(`http://localhost:8000/api/posts/${id}`, {withCredentials:true}).then(()=> {
+        axios.delete(`http://localhost:8000/api/posts/${id}`, {withCredentials: true}).then(() => {
             navigate("/")
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
+    }
+
+    const handleSend = () => {
+        if (socket && isAuth && inputText){
+            socket.send(JSON.stringify(inputText))
+        }
+    }
+
+    const handleChangeInput = (e:React.ChangeEvent<HTMLInputElement>) => {
+        setInputText(e.target.value);
     }
 
     return (
@@ -63,14 +105,18 @@ const PostPage: React.FC = () => {
                         <div className={styles.post}>
                             <div className={styles.nav}>
                                 {post.user.id === userId ? <>
-                                    <button onClick={()=>{navigate(`/edit-post/${id}`)}} className={styles.nav__button}>
+                                    <button onClick={() => {
+                                        navigate(`/edit-post/${id}`)
+                                    }} className={styles.nav__button}>
                                         <img
                                             className={styles.nav__button__img}
                                             src={editImage}
                                             alt="edit"
                                         />
                                     </button>
-                                    <button onClick={()=>{setModalOpen(true)}} className={styles.nav__button}>
+                                    <button onClick={() => {
+                                        setModalOpen(true)
+                                    }} className={styles.nav__button}>
                                         <img
                                             className={styles.nav__button__img}
                                             src={removeImage}
@@ -115,6 +161,7 @@ const PostPage: React.FC = () => {
                         </div>
                     </div>
                 ) : <NotFound/>
+
             )}
             <ConfirmationModal
                 text={"Are you sure you want to delete this post?"}
@@ -122,6 +169,25 @@ const PostPage: React.FC = () => {
                 onClose={() => setModalOpen(false)}
                 onConfirm={deletePost}
             />
+            {comments ? <div className={styles.chat_container}>
+                {comments.map((comment, index) =>
+                    <Comment
+                        key={index}
+                        isAuthor={post?.user.id === userId}
+                        id={0}
+                        user_id={comment.user_id}
+                        user_email={comment.user_email}
+                        username={comment.username}
+                        profile_picture={comment.profile_picture}
+                        content={comment.content}
+                        created_at={comment.created_at}
+                    />
+                )}
+                <div className={styles.send_message}>
+                    <input value={inputText} onChange={handleChangeInput} className={styles.send_message__input} type="text"/>
+                    <button onClick={handleSend} className={styles.send_message__button}>Send</button>
+                </div>
+            </div> : null}
         </>
     );
 };

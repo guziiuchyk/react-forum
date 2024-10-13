@@ -21,9 +21,9 @@ const EditPost: React.FC = () => {
 
     const {id} = useParams();
     const user = useSelector((state: RootState) => state.user.user);
-    
+
     const isAuth = useAuth()
-    
+
     const [post, setPost] = useState<PostType | null>(null)
     const [isLoading, setIsLoading] = useState(true);
     const [topic, setTopic] = useState("");
@@ -67,10 +67,8 @@ const EditPost: React.FC = () => {
             navigate(`/posts/${id}`)
         })
     }
-    
 
     useEffect(() => {
-
         const fetchPost = () => {
             axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/posts/${id}`).then((res) => {
                 setIsLoading(false);
@@ -79,7 +77,6 @@ const EditPost: React.FC = () => {
                     navigate("/login")
                     return;
                 }
-
                 setPost(post);
                 setTopic(post.topic);
                 setContent(post.content);
@@ -89,12 +86,10 @@ const EditPost: React.FC = () => {
                 setIsLoading(false);
             })
         }
-
         if (isAuth === false){
             navigate("/login")
             return
         }
-
         if (isLoading && isAuth === true) {
             fetchPost()
         }

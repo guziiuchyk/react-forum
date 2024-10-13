@@ -1,0 +1,26 @@
+.comment {
+    display: flex;
+    border-top: 1px solid #ddd;
+    padding: 20px 0;
+    margin: 10px 0;
+}
+.title{
+    display: flex;
+    justify-content: space-between;
+}
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+.content {
+    flex: 1;
+}
+.username {
+    font-weight: bold;
+}
+.timestamp {
+    color: #999;
+    font-size: 0.9em;
+}
