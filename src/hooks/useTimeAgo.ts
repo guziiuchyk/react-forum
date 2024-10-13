@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 const formatDate = (dateString: string): string => {
     const options: Intl.DateTimeFormatOptions = {
@@ -44,7 +44,17 @@ const timeAgoOrDate = (dateString: string): string => {
 };
 
 function useTimeAgo(dateString: string): string {
-    return useMemo(() => timeAgoOrDate(dateString), [dateString]);
+    const [timeAgo, setTimeAgo] = useState(() => timeAgoOrDate(dateString));
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTimeAgo(timeAgoOrDate(dateString));
+        }, 60000);
+
+        return () => clearInterval(interval);
+    }, [dateString]);
+
+    return timeAgo;
 }
 
 export default useTimeAgo;
