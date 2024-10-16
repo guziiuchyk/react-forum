@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Header from "../../components/header/header.tsx";
 import styles from "./editPost.module.css"
 import {useNavigate, useParams} from "react-router-dom";
-import {GetApiPaginationPosts, PostType} from "../../types/types.ts";
+import {GetApiPaginationGeneric, PostType} from "../../types/types.ts";
 import axios, {AxiosError} from "axios";
 import NotFound from "../../components/notFound/notFound.tsx";
 import {useSelector} from "react-redux";
@@ -64,7 +64,7 @@ const EditPost: React.FC = () => {
 
     useEffect(() => {
         const fetchPost = () => {
-            axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/posts/${id}`).then((res) => {
+            axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts/${id}`).then((res) => {
                 setIsLoading(false);
                 const post = res.data.items[0]
                 if(user?.id !== post.user.id){

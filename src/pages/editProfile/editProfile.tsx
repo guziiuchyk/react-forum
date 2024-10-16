@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
 import axios from "axios";
 import {login} from "../../redux/slices/userSlice.ts";
-import {UserPostType, UserType} from "../../types/types.ts";
+import {UserType} from "../../types/types.ts";
 
 const EditProfile: React.FC = () => {
 
@@ -98,11 +98,7 @@ const EditProfile: React.FC = () => {
             }
         }).then((response) => {
             if (user) {
-                const newUser: UserType = {
-                    ...response.data,
-                    posts: user.posts as UserPostType[]
-                };
-                dispatch(login(newUser));
+                dispatch(login(response.data));
                 navigate("/profile");
             }
         }).catch(() => {

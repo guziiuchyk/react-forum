@@ -9,7 +9,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import NotFound from "../../components/notFound/notFound.tsx";
 import useTimeAgo from "../../hooks/useTimeAgo.ts";
-import { CommentType, GetApiPaginationPosts, PostType } from "../../types/types.ts";
+import {CommentType, GetApiPaginationGeneric, PostType} from "../../types/types.ts";
 import Tag from "../../components/post/tag/tag.tsx";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store.ts";
@@ -19,9 +19,6 @@ import useAuth from "../../hooks/useAuth.ts";
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import 'prismjs/themes/prism-tomorrow.css';
-interface GetOldCommentsType {
-    comments: CommentType[];
-}
 
 const PostPage: React.FC = () => {
     const { id } = useParams();
@@ -42,7 +39,7 @@ const PostPage: React.FC = () => {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const res = await axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/posts/${id}`);
+                const res = await axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts/${id}`);
                 setPost(res.data.items[0]);
             } catch {
                 setPost(null);
@@ -55,10 +52,9 @@ const PostPage: React.FC = () => {
             fetchPost();
         }
     }, [loading, id]);
-
     useEffect(() => {
         const fetchComments = async () => {
-            const res = await axios.get<GetOldCommentsType>(`http://localhost:8000/api/api/posts/${id}/all-comments?size=20&page=1`);
+            const res = await axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/api/posts/${id}/all-comments?size=20&page=1`);
             setComments(res.data.items);
         };
         fetchComments();

@@ -29,15 +29,16 @@ interface PostProps {
 
 const Post: React.FC<PostProps> = (props) => {
 
-    const {topic, tags, info, isLiked, id, created_at, author} = props;
+    const {topic, tags, info, id, created_at, author} = props;
 
     const navigate = useNavigate();
 
     const formatedDate = useTimeAgo(created_at);
-    const user = useSelector((state: RootState) => state.user.user);
-    const isAuthor = author?.id === user?.id;
+    const {isAuthenticated,user} = useSelector((state: RootState) => state.user);
+    const isAuthor = author.id === user?.id;
     const wrapperRef = useRef<HTMLDivElement | null>(null)
     const [isModalOpen, setModalOpen] = useState(false);
+    const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
 
     const deletePost = (id:number) => {
         axios.delete(`http://localhost:8000/api/posts/${id}`, {withCredentials:true}).then(()=> {
@@ -47,6 +48,21 @@ const Post: React.FC<PostProps> = (props) => {
         }).catch((err)=>{
             console.log(err)
         })
+    }
+
+    const handleLikeButton = (id:number) => {
+        if(!isAuthenticated) return;
+        if(isLiked){
+            axios.delete(`http://localhost:8000/api/posts/${id}/like/`, {withCredentials:true}).then(()=> {
+                info.likes -= 1
+                setIsLiked(false)
+            })
+        } else {
+            axios.post(`http://localhost:8000/api/posts/${id}/like/`, {}, {withCredentials:true}).then(()=> {
+                info.likes += 1
+                setIsLiked(true)
+            })
+        }
     }
 
     return (
@@ -65,7 +81,7 @@ const Post: React.FC<PostProps> = (props) => {
                         </div>
                     </button>
                 </> : ""}
-                <button>
+                <button onClick={()=> {handleLikeButton(id)}}>
                     <div className={styles.button}><img className={styles.button__img}
                                                         src={isLiked ? likeActiveImage : likeImage} alt="like"/></div>
                 </button>

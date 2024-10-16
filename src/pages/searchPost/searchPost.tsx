@@ -6,7 +6,7 @@ import NotFound from "../../components/notFound/notFound.tsx";
 import Post from "../../components/post/post.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
-import {PostType} from "../../types/types.ts";
+import {GetApiPaginationGeneric, PostType} from "../../types/types.ts";
 
 const SearchPost: React.FC = () => {
 
@@ -18,8 +18,8 @@ const SearchPost: React.FC = () => {
     useEffect(() => {
         const fetchPosts = () => {
             setIsLoading(true);
-            axios.get(`http://localhost:8000/api/posts/${searchText}`).then((res) => {
-                setPosts(res.data);
+            axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts/${searchText}`).then((res) => {
+                setPosts(res.data.items);
                 setIsLoading(false);
             }).catch((err) => {
                 console.log(err)
@@ -39,8 +39,8 @@ const SearchPost: React.FC = () => {
                     topic={post.topic}
                     author={{username: post.user.username, id: post.user.id, profile_picture:post.user.profile_picture}}
                     tags={["test", "test2", "test3"]}
-                    info={{likes: 1000, views: 10000, comments: 100000}}
-                    isLiked={true}
+                    info={{likes: post.likes_count, views: 10000, comments: post.comments_count}}
+                    isLiked={post.is_liked}
                     id={post.id}
                     created_at={post.created_at}
                 />) : <NotFound/>}

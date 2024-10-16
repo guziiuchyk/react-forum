@@ -5,6 +5,7 @@ export interface PostType {
     "created_at": string,
     "tags": string[],
     "likes_count": number,
+    comments_count: number,
     "is_liked": boolean,
     "user": {
         "id": number,
@@ -30,20 +31,10 @@ export interface UserType {
     email: string;
     profile_picture:string;
     bio: string;
-    posts: UserPostType[];
 }
 
-export interface UserPostType{
-    id:number;
-    user_id: number;
-    topic:string;
-    content:string;
-    created_at: string;
-    tags:string[];
-}
-
-export interface GetApiPaginationPosts {
-    items: PostType[];
+export interface GetApiPaginationGeneric<itemsType> {
+    items: itemsType[];
     total: number;
     page: number;
     size: number;

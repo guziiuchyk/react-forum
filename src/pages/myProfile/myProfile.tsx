@@ -7,7 +7,7 @@ import useAuth from "../../hooks/useAuth.ts";
 import {useNavigate} from "react-router-dom";
 import Post from "../../components/post/post.tsx";
 import axios from "axios";
-import {GetApiPaginationPosts, PostType, UserType} from "../../types/types.ts";
+import {GetApiPaginationGeneric, PostType, UserType} from "../../types/types.ts";
 
 const MyProfile: React.FC = () => {
 
@@ -29,7 +29,7 @@ const MyProfile: React.FC = () => {
 
     useEffect(() => {
         const fetchPosts = (): void => {
-            axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/users/${user?.id}/posts/?size=5&page=${currentPage}`, {withCredentials: true})
+            axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/users/${user?.id}/posts/?size=5&page=${currentPage}`, {withCredentials: true})
                 .then((res) => {
                     if (currentPage === 1) {
                         setPosts(res.data.items);
@@ -86,8 +86,8 @@ const MyProfile: React.FC = () => {
                             topic={post.topic}
                             author={{username: user.username, id: post.user.id, profile_picture: user.profile_picture}}
                             tags={post.tags}
-                            info={{likes: 1000, views: 10000, comments: 100000}}
-                            isLiked={true}
+                            info={{likes: post.likes_count, views: 10000, comments: post.comments_count}}
+                            isLiked={post.is_liked}
                             id={post.id}
                             created_at={post.created_at}
                         />

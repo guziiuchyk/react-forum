@@ -4,7 +4,7 @@ import CreatePost from "./createPost/createPost.tsx";
 import styles from "./home.module.css";
 import Post from "../../components/post/post.tsx";
 import axios from "axios";
-import {GetApiPaginationPosts, PostType} from "../../types/types.ts";
+import {GetApiPaginationGeneric, PostType} from "../../types/types.ts";
 
 const Home: React.FC = () => {
 
@@ -16,7 +16,7 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         const fetchPosts = (): void => {
-            axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/posts?size=5&page=${currentPage}`, {withCredentials: true})
+            axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts?size=5&page=${currentPage}`, {withCredentials: true})
                 .then((res) => {
                     if (currentPage === 1) {
                         setPosts(res.data.items);
@@ -71,7 +71,7 @@ const Home: React.FC = () => {
                                 profile_picture: post.user.profile_picture,
                             }}
                             tags={post.tags}
-                            info={{likes: post.likes_count, views: 10000, comments: 100000}}
+                            info={{likes: post.likes_count, views: 10000, comments: post.comments_count}}
                             isLiked={post.is_liked}
                             id={post.id}
                             created_at={post.created_at}
