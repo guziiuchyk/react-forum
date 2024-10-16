@@ -7,36 +7,64 @@ import useAuth from "../../hooks/useAuth.ts";
 import {useNavigate} from "react-router-dom";
 import Post from "../../components/post/post.tsx";
 import axios from "axios";
-import {UserPostType, UserType} from "../../types/types.ts";
+import {GetApiPaginationPosts, PostType, UserType} from "../../types/types.ts";
 
 const MyProfile: React.FC = () => {
 
     const isAuthenticated = useAuth();
     const navigate = useNavigate();
-    const [posts, setPosts] = useState<UserPostType[]>([]);
+    const [posts, setPosts] = useState<PostType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [fetching, setFetching] = useState(true);
+    const [totalCount, setTotalCount] = useState(0);
+    
     const user = useSelector((state: RootState) => state.user.user as UserType | null);
 
     useEffect(() => {
-
-        if (isAuthenticated === false) {
+        if(isAuthenticated === false){
             navigate("/login");
         }
+    }, [isAuthenticated, navigate]);
 
-        const fetchPosts = () => {
-            axios.get(`http://localhost:8000/api/my-profile`, {withCredentials: true}).then((res) => {
-                setPosts(res.data.posts);
-                setIsLoading(false);
-            }).catch((err) => {
-                console.log(err)
-                setIsLoading(false);
-            })
+    useEffect(() => {
+        const fetchPosts = (): void => {
+            axios.get<GetApiPaginationPosts>(`http://localhost:8000/api/users/${user?.id}/posts/?size=5&page=${currentPage}`, {withCredentials: true})
+                .then((res) => {
+                    if (currentPage === 1) {
+                        setPosts(res.data.items);
+                    } else {
+                        setPosts((prevPosts) => [...prevPosts, ...res.data.items]);
+                    }
+                    setTotalCount(res.data.total);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                    setFetching(false);
+                });
+        };
+
+        if (fetching && user) {
+            fetchPosts();
         }
-        if (isLoading && isAuthenticated) {
-            fetchPosts()
-        }
-    }, [isAuthenticated, navigate, isLoading])
+    }, [fetching, currentPage, user]);
+
+    useEffect(() => {
+        const handleScroll = (e: Event) => {
+            const target = e.target as Document;
+            const scrollPosition = target.documentElement.scrollHeight - (target.documentElement.scrollTop + window.innerHeight);
+
+            if (scrollPosition < 200 && posts.length < totalCount && !fetching) {
+                setFetching(true);
+                setCurrentPage((prevPage) => prevPage + 1);
+            }
+        };
+
+        document.addEventListener("scroll", handleScroll);
+        return () => {
+            document.removeEventListener("scroll", handleScroll);
+        };
+    }, [posts, totalCount, fetching]);
 
     return (
         <>
@@ -56,7 +84,7 @@ const MyProfile: React.FC = () => {
                         <Post
                             key={index}
                             topic={post.topic}
-                            author={{username: user.username, id: post.user_id, profile_picture: user.profile_picture}}
+                            author={{username: user.username, id: post.user.id, profile_picture: user.profile_picture}}
                             tags={post.tags}
                             info={{likes: 1000, views: 10000, comments: 100000}}
                             isLiked={true}

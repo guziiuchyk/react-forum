@@ -74,7 +74,7 @@
 
 .chat_container {
     width: 70%;
-    height: 500px;
+    max-height: 500px;
     background-color: var(--primary-color);
     padding: 20px 50px;
     border-radius: 10px;
@@ -102,3 +102,4 @@
     border-radius: 10px;
     text-align: center;
 }
+
