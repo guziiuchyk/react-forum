@@ -65,7 +65,7 @@ const SearchPost: React.FC = () => {
                     key={index}
                     topic={post.topic}
                     author={{username: post.user.username, id: post.user.id, profile_picture:post.user.profile_picture}}
-                    tags={["test", "test2", "test3"]}
+                    tags={post.tags}
                     info={{likes: post.likes_count, views: 10000, comments: post.comments_count}}
                     isLiked={post.is_liked}
                     id={post.id}
