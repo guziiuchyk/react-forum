@@ -207,9 +207,9 @@ const PostPage: React.FC = () => {
                     {comments.map((comment, index) => (
                         <Comment key={index} {...comment} isAuthor={post?.user.id === userId} />
                     ))}
-                    <div className={styles.send_message}>
+                    {isAuth ? <div className={styles.send_message}>
                         <input
-                            onKeyDown={(e:React.KeyboardEvent<HTMLInputElement>) => {
+                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                                 if (e.key === 'Enter') {
                                     handleSend();
                                 }
@@ -221,7 +221,7 @@ const PostPage: React.FC = () => {
                             placeholder="Write a comment..."
                         />
                         <button onClick={handleSend} className={styles.send_message__button}>Send</button>
-                    </div>
+                    </div> : ""}
                 </div>
             ) : null}
         </>
