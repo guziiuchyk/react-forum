@@ -37,27 +37,16 @@ const PostPage: React.FC = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const fetchPost = async () => {
-            try {
-                const res = await axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts/${id}`);
-                setPost(res.data.items[0]);
-            } catch {
-                setPost(null);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         if (loading) {
-            fetchPost();
+            axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts/${id}`, {withCredentials: true}).then(res => {
+                setPost(res.data.items[0]);
+            }).finally(() => setLoading(false));
         }
     }, [loading, id]);
     useEffect(() => {
-        const fetchComments = async () => {
-            const res = await axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/api/posts/${id}/all-comments?size=20&page=1`);
+        axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/api/posts/${id}/all-comments?size=20&page=1`).then(res => {
             setComments(res.data.items);
-        };
-        fetchComments();
+        })
     }, [id]);
 
     useEffect(() => {
@@ -66,6 +55,12 @@ const PostPage: React.FC = () => {
             const comment = JSON.parse(e.data) as CommentType;
             console.log(comment.username);
             setComments((prevComments) => [...prevComments, comment]);
+            setPost(prevState => {
+                if(prevState){
+                    prevState.comments_count += 1
+                }
+                return prevState;
+            })
         };
         setSocket(socket);
 
@@ -113,6 +108,39 @@ const PostPage: React.FC = () => {
         setInputText(e.target.value);
     };
 
+    const handleLikeButton = () => {
+        if(!isAuth) return;
+        if(post?.is_liked){
+            axios.delete(`http://localhost:8000/api/posts/${id}/like/`, {withCredentials:true}).then(()=> {
+                setPost(prevState => {
+                    if (prevState) {
+                        return {
+                            ...prevState,
+                            likes_count: prevState.likes_count - 1,
+                            is_liked: false,
+                        };
+                    }
+                    return prevState;
+                });
+
+            })
+        } else {
+            axios.post(`http://localhost:8000/api/posts/${id}/like/`, {}, {withCredentials:true}).then(()=> {
+                setPost(prevState => {
+                    if (prevState) {
+                        return {
+                            ...prevState,
+                            likes_count: prevState.likes_count + 1,
+                            is_liked: true,
+                        };
+                    }
+                    return prevState;
+                });
+
+            })
+        }
+    }
+
     return (
         <>
             <Header />
@@ -134,7 +162,7 @@ const PostPage: React.FC = () => {
                                         </button>
                                     </>
                                 )}
-                                <button className={styles.nav__button}>
+                                <button onClick={handleLikeButton} className={styles.nav__button}>
                                     <img className={styles.nav__button__img} src={post.is_liked ? likeActiveImage : likeImage} alt="like" />
                                 </button>
                             </div>
