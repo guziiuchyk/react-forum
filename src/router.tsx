@@ -12,6 +12,8 @@ import Profile from "./pages/profile/profile.tsx";
 import EditProfile from "./pages/editProfile/editProfile.tsx";
 import AboutUs from "./pages/aboutUs/aboutUs.tsx";
 import Settings from "./pages/settings/settings.tsx";
+import ChangePassword from "./pages/changePassword/changePassword.tsx";
+import DeleteAccount from "./pages/deleteAccount/deleteAccount.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -72,6 +74,16 @@ export const router = createBrowserRouter([
     {
         path: "/settings",
         element: <Settings/>,
+        errorElement: <Error/>
+    },
+    {
+        path: "/settings/change-password",
+        element: <ChangePassword/>,
+        errorElement: <Error/>
+    },
+    {
+        path: "/settings/delete-account",
+        element: <DeleteAccount/>,
         errorElement: <Error/>
     }
 ]);

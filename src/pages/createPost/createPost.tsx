@@ -36,11 +36,7 @@ const CreatePost: React.FC = () => {
     }
 
     const handleCreate = (): void => {
-        axios.post("http://localhost:8000/api/posts", {
-            topic,
-            content: content,
-            tags: tags.split(" "),
-        }, {withCredentials: true}).then((res) => {
+        axios.post(`http://localhost:8000/api/posts?topic=${encodeURIComponent(topic)}&content=${encodeURIComponent(content)}&tags=${tags.split(" ").join(", ") ||" "}`, {}, {withCredentials: true}).then((res) => {
             navigate(`/posts/${res.data.id}`);
         }).catch((err) => {
             console.log(err.response)
