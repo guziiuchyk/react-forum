@@ -15,12 +15,29 @@ const SearchPost: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
     const [fetching, setFetching] = useState(true);
-
     const searchText = useSelector((state: RootState) => state.search.value);
+    const [debouncedSearchText, setDebouncedSearchText] = useState(searchText);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setDebouncedSearchText(searchText);
+        }, 300);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [searchText]);
+
+    useEffect(() => {
+        setPosts([]);
+        setCurrentPage(1);
+        setFetching(true);
+        setIsLoading(true);
+    }, [debouncedSearchText]);
 
     useEffect(() => {
         const fetchPosts = (): void => {
-            axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts/${searchText}?size=5&page=${currentPage}`, {withCredentials: true})
+            axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts/${debouncedSearchText}?size=5&page=${currentPage}`, {withCredentials: true})
                 .then((res) => {
                     if (currentPage === 1) {
                         setPosts(res.data.items);
@@ -38,7 +55,7 @@ const SearchPost: React.FC = () => {
         if (fetching) {
             fetchPosts();
         }
-    }, [fetching, currentPage, searchText]);
+    }, [fetching, currentPage, debouncedSearchText]);
 
     useEffect(() => {
         const handleScroll = (e: Event) => {
