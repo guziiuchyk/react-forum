@@ -3,6 +3,7 @@ export interface PostType {
     "topic": string,
     "content": string,
     "created_at": string,
+    "files": string[],
     "tags": string[],
     "likes_count": number,
     comments_count: number,
