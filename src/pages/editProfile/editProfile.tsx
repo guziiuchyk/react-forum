@@ -76,7 +76,7 @@ const EditProfile: React.FC = () => {
                 setError("Username must be between 3 and 20 characters");
                 return;
             }
-            queryString += `&name=${encodeURIComponent(name)}`;
+            queryString += `&username=${encodeURIComponent(name)}`;
         }
 
         if (bio !== user?.bio) {
