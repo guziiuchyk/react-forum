@@ -18,7 +18,6 @@ import Comment from "./comment/comment.tsx";
 import useAuth from "../../hooks/useAuth.ts";
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
-import 'prismjs/themes/prism-tomorrow.css';
 
 const PostPage: React.FC = () => {
     const { id } = useParams();

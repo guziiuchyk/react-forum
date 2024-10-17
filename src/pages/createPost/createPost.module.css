@@ -31,7 +31,6 @@
     resize: vertical;
     overflow-wrap: break-word;
     background-color: var(--ui-elements-color);
-    margin: 5px 0 25px 0;
     max-height: 120px;
 }
 
@@ -56,4 +55,25 @@
 .button_wrapper {
     display: flex;
     justify-content: center;
+}
+
+.textarea_wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 25px 0;
+}
+
+.textarea__absolute_block{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #aa5e27;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
 }
