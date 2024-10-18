@@ -1,22 +1,25 @@
 import { useState, useEffect } from 'react';
 
-const useTimeAgo = (timestamp: string): string => {
-    const [timeAgo, setTimeAgo] = useState(() => calculateTimeAgo(timestamp));
+const useTimeAgo = (timestamp: string | null): string => {
+    const [timeAgo, setTimeAgo] = useState<string>('');
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            setTimeAgo(calculateTimeAgo(timestamp));
-        }, 60000); // обновляем каждую минуту
+        if (!timestamp) return;
 
-        return () => clearInterval(intervalId); // очищаем таймер при размонтировании
+        const update = () => {
+            setTimeAgo(calculateTimeAgo(timestamp));
+        };
+
+        update();
+
+        const intervalId = setInterval(update, 60000);
+        return () => clearInterval(intervalId);
     }, [timestamp]);
 
     return timeAgo;
 };
 
 const calculateTimeAgo = (timestamp: string): string => {
-    if (!timestamp) return 'just now';
-
     const timeDiff = Date.now() - new Date(timestamp).getTime();
     const minutes = Math.floor(timeDiff / 60000);
 
