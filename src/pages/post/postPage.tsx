@@ -1,39 +1,35 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Header from "../../components/header/header.tsx";
 import styles from "./postPage.module.css";
 import likeActiveImage from "../../assets/like-active.svg";
 import likeImage from "../../assets/like.svg";
 import editImage from "../../assets/edit.svg";
 import removeImage from "../../assets/remove.svg";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import NotFound from "../../components/notFound/notFound.tsx";
 import useTimeAgo from "../../hooks/useTimeAgo.ts";
-import {CommentType, GetApiPaginationGeneric, PostType} from "../../types/types.ts";
+import {GetApiPaginationGeneric, PostType} from "../../types/types.ts";
 import Tag from "../../components/post/tag/tag.tsx";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "../../redux/store.ts";
 import ConfirmationModal from "../../components/confirmationModal/confirmationModal.tsx";
-import Comment from "./comment/comment.tsx";
 import useAuth from "../../hooks/useAuth.ts";
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
+import Comments from "./comments/comments.tsx";
 
 const PostPage: React.FC = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const [post, setPost] = useState<PostType | null>(null);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setModalOpen] = useState(false);
-    const [comments, setComments] = useState<CommentType[]>([]);
-    const [socket, setSocket] = useState<WebSocket | null>(null);
-    const [inputText, setInputText] = useState("");
-    const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
 
-    const timeAgo = useTimeAgo(post?.created_at || "");
+    const timeAgo = useTimeAgo(post?.created_at || "")
+
     const userId = useSelector((state: RootState) => state.user.user?.id);
     const navigate = useNavigate();
     const isAuth = useAuth();
-    const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (loading) {
@@ -42,75 +38,20 @@ const PostPage: React.FC = () => {
             }).finally(() => setLoading(false));
         }
     }, [loading, id]);
-    useEffect(() => {
-        axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/api/posts/${id}/all-comments?size=20&page=1`).then(res => {
-            setComments(res.data.items);
-        })
-    }, [id]);
-
-    useEffect(() => {
-        const socket = new WebSocket(`ws://localhost:8000/ws/${id}`);
-        socket.onmessage = (e: MessageEvent<string>) => {
-            const comment = JSON.parse(e.data) as CommentType;
-            console.log(comment.username);
-            setComments((prevComments) => [...prevComments, comment]);
-            setPost(prevState => {
-                if(prevState){
-                    prevState.comments_count += 1
-                }
-                return prevState;
-            })
-        };
-        setSocket(socket);
-
-        return () => {
-            socket.close();
-        };
-    }, [id]);
-
-    useEffect(() => {
-        const currentRef = scrollRef.current;
-        if (currentRef) {
-            const handleScroll = () => {
-                const { scrollTop, scrollHeight, clientHeight } = currentRef;
-                setIsScrolledToBottom(scrollTop + clientHeight >= scrollHeight);
-            };
-
-            currentRef.addEventListener('scroll', handleScroll);
-            return () => currentRef.removeEventListener('scroll', handleScroll);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (isScrolledToBottom && scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-        }
-    }, [comments, isScrolledToBottom]);
 
     const deletePost = async () => {
         try {
-            await axios.delete(`http://localhost:8000/api/posts/${id}`, { withCredentials: true });
+            await axios.delete(`http://localhost:8000/api/posts/${id}`, {withCredentials: true});
             navigate("/");
         } catch (err) {
             console.log(err);
         }
     };
 
-    const handleSend = () => {
-        if (socket && isAuth && inputText) {
-            socket.send(JSON.stringify(inputText));
-            setInputText("");
-        }
-    };
-
-    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputText(e.target.value);
-    };
-
     const handleLikeButton = () => {
-        if(!isAuth) return;
-        if(post?.is_liked){
-            axios.delete(`http://localhost:8000/api/posts/${id}/like/`, {withCredentials:true}).then(()=> {
+        if (!isAuth) return;
+        if (post?.is_liked) {
+            axios.delete(`http://localhost:8000/api/posts/${id}/like/`, {withCredentials: true}).then(() => {
                 setPost(prevState => {
                     if (prevState) {
                         return {
@@ -124,7 +65,7 @@ const PostPage: React.FC = () => {
 
             })
         } else {
-            axios.post(`http://localhost:8000/api/posts/${id}/like/`, {}, {withCredentials:true}).then(()=> {
+            axios.post(`http://localhost:8000/api/posts/${id}/like/`, {}, {withCredentials: true}).then(() => {
                 setPost(prevState => {
                     if (prevState) {
                         return {
@@ -142,7 +83,7 @@ const PostPage: React.FC = () => {
 
     return (
         <>
-            <Header />
+            <Header/>
 
             {loading ? (
                 <div>Loading...</div>
@@ -153,16 +94,18 @@ const PostPage: React.FC = () => {
                             <div className={styles.nav}>
                                 {post.user.id === userId && (
                                     <>
-                                        <button onClick={() => navigate(`/edit-post/${id}`)} className={styles.nav__button}>
-                                            <img className={styles.nav__button__img} src={editImage} alt="edit" />
+                                        <button onClick={() => navigate(`/edit-post/${id}`)}
+                                                className={styles.nav__button}>
+                                            <img className={styles.nav__button__img} src={editImage} alt="edit"/>
                                         </button>
                                         <button onClick={() => setModalOpen(true)} className={styles.nav__button}>
-                                            <img className={styles.nav__button__img} src={removeImage} alt="delete" />
+                                            <img className={styles.nav__button__img} src={removeImage} alt="delete"/>
                                         </button>
                                     </>
                                 )}
                                 <button onClick={handleLikeButton} className={styles.nav__button}>
-                                    <img className={styles.nav__button__img} src={post.is_liked ? likeActiveImage : likeImage} alt="like" />
+                                    <img className={styles.nav__button__img}
+                                         src={post.is_liked ? likeActiveImage : likeImage} alt="like"/>
                                 </button>
                             </div>
                             <div className={styles.topic}>{post.topic}</div>
@@ -170,12 +113,12 @@ const PostPage: React.FC = () => {
                                 <ReactMarkdown remarkPlugins={[remarkBreaks]}>{post.content}</ReactMarkdown>
                             </div>
                             <div className={styles.tags}>
-                                {post.tags.map((tag) => <Tag key={tag} tag={tag} />)}
+                                {post.tags.map((tag) => <Tag key={tag} tag={tag}/>)}
                             </div>
-                            <div className={styles.line} />
+                            <div className={styles.line}/>
                             <div className={styles.post_footer}>
                                 <div className={styles.author}>
-                                    <img src={post.user.profile_picture} alt="" className={styles.author__img} />
+                                    <img src={post.user.profile_picture} alt="" className={styles.author__img}/>
                                     <div className={styles.author__info}>
                                         <Link className={styles.author__name} to={`/profile/${post.user.id}`}>
                                             {post.user.username}
@@ -185,13 +128,13 @@ const PostPage: React.FC = () => {
                                 </div>
                                 <div className={styles.info}>
                                     <div className={styles.info__field}>{post.likes_count} Likes</div>
-                                    <div className={styles.info__field}>{comments.length} Comments</div>
+                                    <div className={styles.info__field}>{post.comments_count} Comments</div>
                                     <div className={styles.info__field}>200 Views</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                ) : <NotFound />
+                ) : <NotFound/>
             )}
 
             <ConfirmationModal
@@ -202,26 +145,7 @@ const PostPage: React.FC = () => {
             />
 
             {post ? (
-                <div ref={scrollRef} className={styles.chat_container}>
-                    {comments.map((comment, index) => (
-                        <Comment key={index} {...comment} isAuthor={post?.user.id === userId} />
-                    ))}
-                    {isAuth ? <div className={styles.send_message}>
-                        <input
-                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                                if (e.key === 'Enter') {
-                                    handleSend();
-                                }
-                            }}
-                            value={inputText}
-                            onChange={handleChangeInput}
-                            className={styles.send_message__input}
-                            type="text"
-                            placeholder="Write a comment..."
-                        />
-                        <button onClick={handleSend} className={styles.send_message__button}>Send</button>
-                    </div> : ""}
-                </div>
+                <Comments setPost={setPost} id={post.id} authorId={post.user.id}/>
             ) : null}
         </>
     );
