@@ -1,7 +1,7 @@
 import React from "react";
-import {CommentType} from "../../../types/types.ts";
+import {CommentType} from "../../../../types/types.ts";
 import styles from "./comment.module.css"
-import useTimeAgo from "../../../hooks/useTimeAgo.ts";
+import useTimeAgo from "../../../../hooks/useTimeAgo.ts";
 
 interface CommentProps extends CommentType {
     isAuthor: boolean;
