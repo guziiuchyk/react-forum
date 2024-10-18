@@ -23,20 +23,35 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
     const [comments, setComments] = useState<CommentType[]>([]);
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(-1);
     const [fetching, setFetching] = useState(true);
-    const [totalCount, setTotalCount] = useState(0);
 
     useEffect(() => {
         const fetchComments = () => {
-            axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/posts/${props.id}/all-comments?size=10&page=${currentPage}`).then(res => {
-                if (currentPage === 1) {
-                    setComments(res.data.items);
-                } else {
-                    setComments((prevComments) => [...res.data.items, ...prevComments]);
+            axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/posts/${props.id}/all-comments?size=10&page=${currentPage === -1 ? 1 : currentPage}`).then(res => {
+                if (currentPage === -1) {
+                    console.log(res.data.pages)
+                    setCurrentPage(res.data.pages);
+                    return;
                 }
-                setTotalCount(res.data.total);
-            }).finally(() => {
+                if (currentPage === -1) {
+                    setCurrentPage(res.data.pages);
+                    return;
+                }
+
+                if (scrollRef.current) {
+                    const previousScrollHeight = scrollRef.current.scrollHeight;
+
+                    setComments((prevComments) => [...res.data.items, ...prevComments]);
+
+                    setTimeout(() => {
+                        if (scrollRef.current) {
+                            const newScrollHeight = scrollRef.current.scrollHeight;
+                            const scrollOffset = newScrollHeight - previousScrollHeight;
+                            scrollRef.current.scrollTop += scrollOffset;
+                        }
+                    }, 0);
+                }
                 setFetching(false);
             })
         }
@@ -46,11 +61,11 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
         }
     }, [props.id, currentPage, fetching]);
 
-    const handleScroll = (e:  React.UIEvent<HTMLDivElement>) => {
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const target = e.target as HTMLDivElement;
-        if(target.scrollTop < 100 && comments.length < totalCount && !fetching) {
+        if (target.scrollTop < 100 && currentPage > 1 && !fetching) {
             setFetching(true);
-            setCurrentPage((prevPage) => prevPage + 1);
+            setCurrentPage((prevPage) => prevPage - 1);
         }
     };
 
