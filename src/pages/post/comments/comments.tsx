@@ -34,11 +34,13 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
         const socket = new WebSocket(`ws://localhost:8000/ws/${props.id}`);
         socket.onmessage = (e: MessageEvent<string>) => {
             const comment = JSON.parse(e.data) as CommentType;
-            console.log(comment.username);
             setComments((prevComments) => [...prevComments, comment]);
             props.setPost(prevState => {
                 if (prevState) {
-                    prevState.comments_count += 1
+                    return {
+                        ...prevState,
+                        comments_count: prevState.comments_count + 1
+                    }
                 }
                 return prevState;
             })
