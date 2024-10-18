@@ -77,3 +77,8 @@
     align-items: center;
     font-size: 24px;
 }
+
+.decr_label{
+    position: relative;
+    top: 20px;
+}

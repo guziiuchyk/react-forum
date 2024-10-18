@@ -23,12 +23,36 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
     const [comments, setComments] = useState<CommentType[]>([]);
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [fetching, setFetching] = useState(true);
+    const [totalCount, setTotalCount] = useState(0);
 
     useEffect(() => {
-        axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/posts/${props.id}/all-comments?size=20&page=1`).then(res => {
-            setComments(res.data.items);
-        })
-    }, [props.id]);
+        const fetchComments = () => {
+            axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/posts/${props.id}/all-comments?size=10&page=${currentPage}`).then(res => {
+                if (currentPage === 1) {
+                    setComments(res.data.items);
+                } else {
+                    setComments((prevComments) => [...res.data.items, ...prevComments]);
+                }
+                setTotalCount(res.data.total);
+            }).finally(() => {
+                setFetching(false);
+            })
+        }
+
+        if (fetching) {
+            fetchComments();
+        }
+    }, [props.id, currentPage, fetching]);
+
+    const handleScroll = (e:  React.UIEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLDivElement;
+        if(target.scrollTop < 100 && comments.length < totalCount && !fetching) {
+            setFetching(true);
+            setCurrentPage((prevPage) => prevPage + 1);
+        }
+    };
 
     useEffect(() => {
         const socket = new WebSocket(`ws://localhost:8000/ws/${props.id}`);
@@ -50,7 +74,7 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
         return () => {
             socket.close();
         };
-    }, [props]);
+    }, []);
 
     useEffect(() => {
         const currentRef = scrollRef.current;
@@ -84,7 +108,7 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
 
 
     return (
-        <div ref={scrollRef} className={styles.chat_container}>
+        <div onScroll={handleScroll} ref={scrollRef} className={styles.chat_container}>
             {comments.map((comment, index) => (
                 <Comment key={index} {...comment} isAuthor={props.authorId === userId}/>
             ))}

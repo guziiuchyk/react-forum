@@ -73,7 +73,7 @@ const CreatePost: React.FC = () => {
                 <div className={styles.title}>Create Post</div>
                 <div className={styles.label}>Topic:</div>
                 <textarea value={topic} onChange={handleTopic} className={styles.textarea}/>
-                <div className={styles.label}>Description:</div>
+                <div className={`${styles.label} ${styles.decr_label}`}>Description:</div>
                 <div className={styles.textarea_wrapper}>
                     <textarea
                         value={content}
