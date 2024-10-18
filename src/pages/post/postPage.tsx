@@ -129,7 +129,6 @@ const PostPage: React.FC = () => {
                                 <div className={styles.info}>
                                     <div className={styles.info__field}>{post.likes_count} Likes</div>
                                     <div className={styles.info__field}>{post.comments_count} Comments</div>
-                                    <div className={styles.info__field}>200 Views</div>
                                 </div>
                             </div>
                         </div>

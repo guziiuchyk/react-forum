@@ -19,7 +19,7 @@ interface PostProps {
     "created_at": string,
     tags: string[],
     isLiked: boolean,
-    info: { views: number, comments: number, likes: number },
+    info: { comments: number, likes: number },
     author: {
         username: string,
         id: number,
@@ -97,7 +97,6 @@ const Post: React.FC<PostProps> = (props) => {
                 </div>
             </div>
             <div className={styles.info}>
-                <span className={styles.info__element}>{info.views} views</span>
                 <span className={styles.info__element}>{info.likes} likes</span>
                 <span className={styles.info__element}>{info.comments} comments</span>
             </div>
