@@ -34,7 +34,7 @@ const Profile: React.FC = () => {
                 return
             }
             if(result[1].status === "fulfilled"){
-                setPosts(result[1].value.data)
+                setPosts(result[1].value.data);
             }
             setIsLoading(false);
         })

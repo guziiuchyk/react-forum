@@ -98,6 +98,7 @@ const Header: React.FC = () => {
                     className={styles.search}
                     type="text"
                     maxLength={40}
+                    autoComplete={"off"}
                 />
                 <Link to={"/search-posts"} className={styles.search__button}>
                     <img className={styles.search__button__img} src={searchImage} alt="search"/>
