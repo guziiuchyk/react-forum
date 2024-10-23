@@ -9,7 +9,6 @@ interface CommentProps extends CommentType {
 
 const Comment: React.FC<CommentProps> = (props) => {
     const date = useTimeAgo(props.created_at);
-
     return (
         <div className={styles.comment}>
             <img src={props.profile_picture} alt="Avatar" className={styles.avatar}/>

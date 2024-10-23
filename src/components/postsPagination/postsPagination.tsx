@@ -4,7 +4,7 @@ import axios from "axios";
 import Post from "../post/post.tsx";
 
 type PropsType = {
-    link: string
+    link: string;
 }
 
 const PostsPagination: React.FC<PropsType> = ({link}: PropsType) => {
