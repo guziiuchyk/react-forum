@@ -18,12 +18,14 @@ import useAuth from "../../hooks/useAuth.ts";
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import Comments from "./comments/comments.tsx";
+import ImageViewer from "./imageViewer/imageViewer.tsx"
 
 const PostPage: React.FC = () => {
     const {id} = useParams();
     const [post, setPost] = useState<PostType | null>(null);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const timeAgo = useTimeAgo(post?.created_at || "")
 
@@ -79,6 +81,11 @@ const PostPage: React.FC = () => {
 
             })
         }
+    };
+
+    const openImageViewer = (index: number) => {
+        setCurrentImageIndex(index);
+        setModalOpen(true);
     }
 
     return (
@@ -109,6 +116,17 @@ const PostPage: React.FC = () => {
                                 </button>
                             </div>
                             <div className={styles.topic}>{post.topic}</div>
+                            {post.files.length > 0 ? <div className={styles.images}>
+                                {post.files.map((file,index) => (
+                                    <img
+                                        className={styles.images_img}
+                                        key={index}
+                                        src={file.link}
+                                        alt=""
+                                        onClick={() => openImageViewer(index)} // Открываем просмотрщик
+                                    />
+                                ))}
+                            </div>: null}
                             <div className={styles.description}>
                                 <ReactMarkdown remarkPlugins={[remarkBreaks]}>{post.content}</ReactMarkdown>
                             </div>
@@ -146,6 +164,14 @@ const PostPage: React.FC = () => {
             {post ? (
                 <Comments setPost={setPost} id={post.id} authorId={post.user.id}/>
             ) : null}
+
+            {isModalOpen && post && (
+                <ImageViewer
+                    images={post.files.map(file => file.link)}
+                    initialIndex={currentImageIndex}
+                    onClose={() => setModalOpen(false)}
+                />
+            )}
         </>
     );
 };

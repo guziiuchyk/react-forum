@@ -1,9 +1,14 @@
+interface FileType {
+    id:number,
+    link:string,
+}
+
 export interface PostType {
     "id": number,
     "topic": string,
     "content": string,
     "created_at": string,
-    "files": string[],
+    "files": FileType[],
     "tags": string[],
     "likes_count": number,
     comments_count: number,
@@ -15,6 +20,8 @@ export interface PostType {
         "profile_picture": string,
     }
 }
+
+
 
 export interface CommentType {
     id: number;

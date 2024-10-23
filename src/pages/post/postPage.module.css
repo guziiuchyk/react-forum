@@ -103,3 +103,7 @@
     text-align: center;
 }
 
+.images_img{
+    max-height: 300px;
+    padding: 5px;
+}

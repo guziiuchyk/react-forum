@@ -18,6 +18,7 @@
 
 .label{
     font-size: 18px;
+    margin-top: 20px;
 }
 
 .textarea {
@@ -78,7 +79,39 @@
     font-size: 24px;
 }
 
-.decr_label{
+.files_wrapper{
     position: relative;
-    top: 20px;
+    background-color: var(--ui-elements-color);
+    min-height: 100px;
+}
+
+.files{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image_preview {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+}
+
+.image_wrapper{
+    position: relative;
+}
+
+.image_cancel{
+    position: absolute;
+    top: -3px;
+    right: 5px;
+    color: red;
+    user-select: none;
+    cursor: pointer;
+    font-size: 20px;
+}
+.empty{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
