@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
 
     useEffect(() => {
         if (Number(id) === userId) {
-            navigate("/profile")
+            navigate("/profile", {replace: true});
         }
     })
 
