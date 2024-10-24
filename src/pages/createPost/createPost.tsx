@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styles from "./CreatePost.module.css";
 import Header from "../../components/header/header.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/useAuth.ts";
+import paperIcon from "../../assets/paper-icon.svg"
 import axios from "axios";
 
 const CreatePost: React.FC = () => {
@@ -13,6 +14,7 @@ const CreatePost: React.FC = () => {
     const [onDrag, setOnDrag] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -110,16 +112,48 @@ const CreatePost: React.FC = () => {
         setImagePreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
     };
 
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+        const newFiles = Array.from(event.target.files || []).filter(file => allowedTypes.includes(file.type));
+
+        if (newFiles.length === 0) {
+            setError("Only PNG, JPG, and JPEG formats are allowed.");
+            return;
+        }
+
+        setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+
+        newFiles.forEach(file => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreviews((prevPreviews) => [...prevPreviews, reader.result as string]);
+            };
+            reader.readAsDataURL(file);
+        });
+    };
+
+
+    const handlePaperClip = () => {
+        fileInputRef.current?.click()
+    }
+
     return (
         <>
             <Header/>
             <div className={styles.content}>
-                {error ? <div className={styles.error}>{error}</div> : null}
                 <div className={styles.title}>Create Post</div>
+                {error ? <div className={styles.error}>{error}</div> : null}
                 <div className={styles.label}>Topic:</div>
                 <textarea value={topic} onChange={handleTopic} className={styles.textarea}/>
 
-                <div className={styles.label}>Images:</div>
+                <div className={styles.images_wrapper}>
+                    <div>Images:</div>
+                    <button onClick={handlePaperClip}>
+                        <img className={styles.images_wrapper__img} src={paperIcon} alt=""/>
+                    </button>
+                    <input onChange={handleFileChange} ref={fileInputRef} style={{display: "none"}} type="file"
+                           accept="image/png, image/jpg, image/jpeg" />
+                </div>
                 <div
                     className={styles.files_wrapper}
                     onDragStart={handleDragStart}
@@ -131,8 +165,8 @@ const CreatePost: React.FC = () => {
                             <div className={styles.empty}>Empty</div>
                         ) : (
                             imagePreviews.map((src, index) => (
-                                <div className={styles.image_wrapper}>
-                                    <img key={index} src={src} alt={`file-preview-${index}`}
+                                <div key={index} className={styles.image_wrapper}>
+                                    <img src={src} alt={`file-preview-${index}`}
                                          className={styles.image_preview}/>
                                     <span onClick={()=> {handleRemoveImage(index)}} className={styles.image_cancel}>X</span>
                                 </div>

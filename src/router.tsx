@@ -14,6 +14,7 @@ import AboutUs from "./pages/aboutUs/aboutUs.tsx";
 import Settings from "./pages/settings/settings.tsx";
 import ChangePassword from "./pages/changePassword/changePassword.tsx";
 import DeleteAccount from "./pages/deleteAccount/deleteAccount.tsx";
+import Chats from "./pages/chats/chats.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -84,6 +85,16 @@ export const router = createBrowserRouter([
     {
         path: "/settings/delete-account",
         element: <DeleteAccount/>,
+        errorElement: <Error/>
+    },
+    {
+        path: "/chats",
+        element: <Chats/>,
+        errorElement: <Error/>
+    },
+    {
+        path: "/chats/:id",
+        element: <Chats/>,
         errorElement: <Error/>
     }
 ]);

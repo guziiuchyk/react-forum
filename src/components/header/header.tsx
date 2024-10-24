@@ -109,7 +109,7 @@ const Header: React.FC = () => {
                     <Link to={"/"} className={styles.profile__link}>
                         <img src={notificationImage} alt="notifications link"/>
                     </Link>
-                    <Link to={"/"} className={styles.profile__link}>
+                    <Link to={"/chats"} className={styles.profile__link}>
                         <img src={messageImage} alt="messages link"/>
                     </Link>
                     <div ref={popUpRef} className={`${styles.profile} ${isActive ? styles.active : ""}`}>

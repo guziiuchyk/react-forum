@@ -115,3 +115,20 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.images_wrapper__img{
+    width: 24px;
+    height: 24px;
+}
+
+.images_wrapper{
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.error{
+    color: red;
+    font-size: 20px;
+}
