@@ -15,6 +15,7 @@ import Settings from "./pages/settings/settings.tsx";
 import ChangePassword from "./pages/changePassword/changePassword.tsx";
 import DeleteAccount from "./pages/deleteAccount/deleteAccount.tsx";
 import Chats from "./pages/chats/chats.tsx";
+import Chat from "./pages/chat/chat.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -94,7 +95,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/chats/:id",
-        element: <Chats/>,
+        element: <Chat/>,
         errorElement: <Error/>
     }
 ]);

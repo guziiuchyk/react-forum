@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import Comment from "./comment/comment.tsx";
 import styles from "../postPage.module.css";
 import useAuth from "../../../hooks/useAuth.ts";
@@ -11,12 +11,11 @@ type PropsType = {
     id: number;
     setPost: React.Dispatch<React.SetStateAction<PostType | null>>;
     authorId: number;
-
 }
 
 const Comments: React.FC<PropsType> = (props: PropsType) => {
 
-    const [inputText, setInputText] = useState("");
+    const [text, setText] = useState("");
     const isAuth = useAuth();
     const userId = useSelector((state: RootState) => state.user.user?.id);
     const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -25,12 +24,12 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
     const [currentPage, setCurrentPage] = useState(-1);
     const [fetching, setFetching] = useState(true);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
         const fetchComments = () => {
             axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/posts/${props.id}/all-comments?size=10&page=${currentPage === -1 ? 1 : currentPage}`).then(res => {
                 if (currentPage === -1) {
-                    console.log(res.data.pages)
                     setCurrentPage(res.data.pages);
                     return;
                 }
@@ -70,7 +69,7 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
     };
 
     useEffect(() => {
-        const socket = new WebSocket(`ws://localhost:8000/ws/${props.id}`);
+        const socket = new WebSocket(`ws://localhost:8000/ws/posts/${props.id}`);
         socket.onmessage = (e: MessageEvent<string>) => {
             const comment = JSON.parse(e.data) as CommentType;
             setComments((prevComments) => [...prevComments, comment]);
@@ -111,15 +110,28 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
     }, [comments, isScrolledToBottom]);
 
     const handleSend = () => {
-        if (socket && isAuth && inputText) {
-            socket.send(JSON.stringify(inputText));
-            setInputText("");
+        if (socket && isAuth && text) {
+            socket.send(JSON.stringify(text));
+            setText("");
+            if (textareaRef.current) {
+                textareaRef.current.style.height = 'auto';
+            }
         }
     };
 
-    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputText(e.target.value);
+    const handleInput = (e: ChangeEvent<HTMLTextAreaElement> | null = null) => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';  // Сбрасываем высоту перед её обновлением
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;  // Устанавливаем высоту в зависимости от содержимого
+        }
+        if (e) {
+            setText(e.target.value);
+        }
     };
+
+    useEffect(() => {
+        handleInput();
+    }, []);
 
 
     return (
@@ -128,20 +140,18 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
                 <Comment key={index} {...comment} isAuthor={props.authorId === userId}/>
             ))}
             {isAuth ? <div className={styles.send_message}>
-                <input
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                        if (e.key === 'Enter') {
-                            handleSend();
-                        }
-                    }}
-                    value={inputText}
-                    onChange={handleChangeInput}
+                <textarea
+                    value={text}
+                    ref={textareaRef}
+                    onChange={handleInput}
                     className={styles.send_message__input}
-                    type="text"
                     placeholder="Write a comment..."
+                    rows={1}
                 />
-                <button onClick={handleSend} className={styles.send_message__button}>Send</button>
-            </div> : ""}
+                <div>
+                    <button onClick={handleSend} className={styles.send_message__button}>Send</button>
+                </div>
+            </div> : null}
         </div>
     )
 }
