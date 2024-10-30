@@ -1,9 +1,9 @@
 import styles from "./profile.module.css";
 import React, {useEffect, useState} from "react";
 import Header from "../../components/header/header.tsx";
-import {UserType} from "../../types/types.ts";
+import {GetApiPaginationGeneric, UserType} from "../../types/types.ts";
 import axios from "axios";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import NotFound from "../../components/notFound/notFound.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
@@ -22,8 +22,8 @@ const Profile: React.FC = () => {
 
     useEffect(() => {
         const fetchUser = () => {
-            axios.get<UserType>(`http://localhost:8000/api/users/${id}`).then((res) => {
-                setUser(res.data);
+            axios.get<GetApiPaginationGeneric<UserType>>(`http://localhost:8000/api/users/${id}`).then((res) => {
+                setUser(res.data.items[0]);
                 setIsLoading(false);
             })
         }
@@ -50,7 +50,7 @@ const Profile: React.FC = () => {
                             <div className={styles.profile__desc}>{user.bio}</div>
                         </div>
                         <div className={styles.profile__nav}>
-                            <button className={styles.button}>Send Message</button>
+                            <Link to={`/chats/${id}`} className={styles.button}>Send Message</Link>
                         </div>
                     </div>
                     <div className={styles.posts_wrapper}>

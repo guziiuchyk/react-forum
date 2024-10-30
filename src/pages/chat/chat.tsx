@@ -1,117 +1,17 @@
 import Header from "../../components/header/header.tsx";
 import styles from "./chat.module.css"
 import Message from "./message/message.tsx";
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import backArrow from "../../assets/arrow-back.svg"
-import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {UserType} from "../../types/types.ts";
-import axios from "axios";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
+import {GetApiPaginationGeneric, MessageType, UserType} from "../../types/types.ts";
+import axios, {AxiosError} from "axios";
 import NotFound from "../../components/notFound/notFound.tsx";
+import useAuth from "../../hooks/useAuth.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "../../redux/store.ts";
 
 const Chat = () => {
-
-    const messages = [
-        {
-            message: "lorem ipsum is dolor text 123sdfds f  DFDS FFD f x AsdsxcASDFVCADSGFDGADSFDSAGADSGFSFDSFDSFDSFDSFSFSDFDSFDSFDSFDSFDSFSDFSD lol ya lol kek 123",
-            isAuthor: false,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        },
-        {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        },
-        {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        },
-        {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        },
-        {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        }, {
-            message: "lorem ipsum is dolor text 123 lol ya lol kek 123",
-            isAuthor: true,
-            profile_image: "http://127.0.0.1:8000/uploads/default.jpg",
-        },
-
-
-    ]
-
     const id = Number(useParams().id)
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -119,6 +19,19 @@ const Chat = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [companion, setCompanion] = useState<UserType | null>(null)
     const [socket, setSocket] = useState<WebSocket | null>(null)
+    const [messages, setMessages] = useState<MessageType[]>([])
+    const [conversationId, setConversationId] = useState<number | null>(null)
+    const navigate = useNavigate();
+
+    const userId = useSelector((state: RootState) => state.user.user?.id);
+
+    const isAuth = useAuth()
+
+    useEffect(() => {
+        if (isAuth === false) {
+            navigate("/login");
+        }
+    }, [isAuth, navigate]);
 
     const handleInput = (e: ChangeEvent<HTMLTextAreaElement> | null = null) => {
         if (textareaRef.current) {
@@ -138,36 +51,77 @@ const Chat = () => {
     }, []);
 
     useEffect(() => {
-        const fetchCompanion = () => {
-            axios.get<UserType>(`http://localhost:8000/api/users/${id}`).then((res) => {
-                setCompanion(res.data)
-            }).finally(() => {
-                setIsLoading(false);
-            })
+        const fetchData = async () => {
+            try {
+                const userResponse = await axios.get<GetApiPaginationGeneric<UserType>>(`http://localhost:8000/api/users/${id}`)
+                setCompanion(userResponse.data.items[0])
+            } catch {
+                navigate("/not-found");
+            }
+            try {
+                const messagesResponse = await axios.get<GetApiPaginationGeneric<MessageType>>(`http://localhost:8000/api/chats/${id}`, {withCredentials: true})
+                setMessages(messagesResponse.data.items)
+                setConversationId(messagesResponse.data.items[0].conversation_id)
+            } catch (err: unknown) {
+
+                const error = err as AxiosError;
+
+                if (error.response?.status === 400) {
+                    console.log(400)
+                    setConversationId(-1)
+                }
+            }
+            setIsLoading(false);
         }
 
         if (isLoading && !companion) {
-            fetchCompanion()
+            fetchData()
         }
 
-    }, [companion, id, isLoading]);
+    }, [companion, id, isLoading, navigate]);
 
     useEffect(() => {
-        const socket = new WebSocket(`ws://localhost:8000/ws/${id}/send-message/`)
-        setSocket(socket)
-        socket.onmessage = (e: MessageEvent<string>)=>{
-            console.log(e.data)
+        if (conversationId && conversationId > 0) {
+            const socket = new WebSocket(`ws://localhost:8000/ws/chats/${conversationId}`)
+            setSocket(socket)
+            socket.onmessage = (e: MessageEvent<string>) => {
+                setMessages(prevState => [...prevState, JSON.parse(e.data) as MessageType])
+            }
+            return () => {
+                socket.close()
+            }
         }
-        return ()=>{
-            socket.close()
-        }
-    }, []);
+    }, [conversationId]);
 
     const handleSend = () => {
-        if(socket){
-            socket.send("fsfdsfds")
+
+        if (text.trim() === "") {
+            return;
+        }
+
+        if (socket) {
+            socket.send(JSON.stringify({content: text, files: []}))
+            setText("")
+            return;
+        }
+        if (conversationId === -1) {
+            axios.post(`http://localhost:8000/api/chats/${id}/send-message`, {content: text}, {withCredentials: true}).then((response) => {
+                console.log(response)
+                window.location.reload();
+            })
         }
     }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && e.shiftKey) {
+            return;
+        }
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleSend()
+        }
+    };
 
     return (
         <>
@@ -177,16 +131,20 @@ const Chat = () => {
                     <div className={styles.header}>
                         <Link className={styles.header__link} to={"/chats"}><img className={styles.header__back_arrow}
                                                                                  src={backArrow} alt="back"/></Link>
-                        <div className={styles.title}>{companion.username}</div>
+                        <Link className={styles.header__link_to_companion} to={`/profile/${id}`}>
+                            <img className={styles.header__img} src={companion.profile_picture} alt="profile"/>
+                            <div className={styles.title}>{companion.username}</div>
+                        </Link>
                     </div>
                     <div className={styles.chat}>
-                        {messages.map((message, index) => <Message key={index} isAuthor={message.isAuthor}
-                                                                   message={message.message}
-                                                                   profile_image={message.profile_image}/>)}
+                        {messages.map((message, index) => <Message id={message.id} key={index}
+                                                                   isAuthor={message.sender_id === Number(userId)}
+                                                                   message={message.content}
+                                                                   profile_image={message.profile_picture}/>)}
                     </div>
                     <div className={styles.input_wrapper}>
                         <textarea value={text} onChange={handleInput} rows={1} ref={textareaRef}
-                                  className={styles.input}/>
+                                  className={styles.input} onKeyDown={handleKeyDown}/>
                         <div className={styles.button_wrapper}>
                             <button onClick={handleSend} className={styles.button}>Send</button>
                         </div>

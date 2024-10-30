@@ -7,3 +7,7 @@ html,body{
     color: var(--primary-font-color);
     background-color: var(--secondary-color);
 }
+
+#root{
+    height: 100%;
+}

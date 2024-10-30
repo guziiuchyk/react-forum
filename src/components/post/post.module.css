@@ -99,3 +99,7 @@
 .buttons_wrapper button:nth-child(2) {
     margin: 0 5px;
 }
+
+.info__date{
+    font-size: 15px;
+}

@@ -121,8 +121,8 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
 
     const handleInput = (e: ChangeEvent<HTMLTextAreaElement> | null = null) => {
         if (textareaRef.current) {
-            textareaRef.current.style.height = 'auto';  // Сбрасываем высоту перед её обновлением
-            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;  // Устанавливаем высоту в зависимости от содержимого
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
         }
         if (e) {
             setText(e.target.value);
@@ -133,6 +133,16 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
         handleInput();
     }, []);
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && e.shiftKey) {
+            return;
+        }
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleSend()
+        }
+    };
 
     return (
         <div onScroll={handleScroll} ref={scrollRef} className={styles.chat_container}>
@@ -147,8 +157,9 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
                     className={styles.send_message__input}
                     placeholder="Write a comment..."
                     rows={1}
+                    onKeyDown={handleKeyDown}
                 />
-                <div>
+                <div className={styles.button_wrapper}>
                     <button onClick={handleSend} className={styles.send_message__button}>Send</button>
                 </div>
             </div> : null}

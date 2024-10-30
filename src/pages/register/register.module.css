@@ -39,3 +39,15 @@
 .link:hover{
     color: var(--hover-accent-color);
 }
+
+@media (max-width: 1070px) {
+    .content{
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 640px) {
+    .content{
+        max-width: 70%;
+    }
+}

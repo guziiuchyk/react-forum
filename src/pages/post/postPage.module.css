@@ -113,3 +113,7 @@
     max-height: 300px;
     padding: 5px;
 }
+
+.button_wrapper{
+    width: 9%;
+}

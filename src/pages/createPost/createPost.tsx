@@ -152,7 +152,7 @@ const CreatePost: React.FC = () => {
                         <img className={styles.images_wrapper__img} src={paperIcon} alt=""/>
                     </button>
                     <input onChange={handleFileChange} ref={fileInputRef} style={{display: "none"}} type="file"
-                           accept="image/png, image/jpg, image/jpeg" />
+                           accept="image/png, image/jpg, image/jpeg" multiple/>
                 </div>
                 <div
                     className={styles.files_wrapper}

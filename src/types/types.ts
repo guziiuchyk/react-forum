@@ -48,3 +48,26 @@ export interface GetApiPaginationGeneric<itemsType> {
     size: number;
     pages: number;
 }
+
+export interface ChatType{
+    id: number;
+    user_id: number;
+    name: string;
+    username: string;
+    profile_picture: string;
+    last_message: string;
+    created_at: string;
+}
+
+export interface MessageType {
+    id: number,
+    sender_id: number;
+    receiver_id: number;
+    conversation_id: number,
+    created_at: string,
+    user_id: number,
+    content: string,
+    username: string,
+    profile_picture:string,
+    files: string[]
+}
