@@ -14,6 +14,7 @@ import useAuth from "../../hooks/useAuth.ts";
 import {setSearchValue} from "../../redux/slices/searchSlice.ts";
 import {logout} from "../../redux/slices/userSlice.ts";
 import axios from "axios";
+import {API_URL} from "../../config.ts";
 
 const Header: React.FC = () => {
     const user = useSelector((state: RootState) => state.user.user);
@@ -64,7 +65,7 @@ const Header: React.FC = () => {
     }
 
     const handleLogoutButton = () => {
-        axios.post("http://localhost:8000/api/logout", {}, {withCredentials: true}).then(() => {
+        axios.post(`${API_URL}/api/logout`, {}, {withCredentials: true}).then(() => {
             dispatch(logout());
             navigate("/login");
         })

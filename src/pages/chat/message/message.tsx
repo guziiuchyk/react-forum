@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import styles from "./message.module.css";
 import axios from "axios";
+import {API_URL} from "../../../config.ts";
 
 interface MessageProps {
     id: number;
@@ -16,7 +17,7 @@ const Message: React.FC<MessageProps> = (props: MessageProps) => {
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
     const handleDeleteButton = () => {
-        axios.delete(`http://localhost:8000/api/chats/${props.id}/delete-message`).then(() => {
+        axios.delete(`${API_URL}/api/chats/${props.id}/delete-message`).then(() => {
             wrapperRef.current?.remove();
         })
     }

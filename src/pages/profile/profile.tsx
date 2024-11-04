@@ -56,7 +56,7 @@ const Profile: React.FC = () => {
                     </div>
                     <div className={styles.posts_wrapper}>
                         {isLoading ? <div>Loading...</div> :
-                            <PostsPagination link={`http://localhost:8000/api/users/${id}/posts/`}/>}
+                            <PostsPagination link={`${API_URL}/api/users/${id}/posts/`}/>}
                     </div>
                 </>
                 : <NotFound/>}
