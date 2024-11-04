@@ -25,3 +25,17 @@
 .project_info a:hover{
     color: var(--hover-accent-color);
 }
+
+.team__item{
+    display: flex;
+    justify-content: center;
+}
+
+.team__item a{
+    color : var(--accent-color);
+
+}
+
+.team__item a:nth-child(2){
+    margin: 0 10px;
+}

@@ -39,16 +39,14 @@
     height: auto;
     min-height: 50px;
     resize: none;
-    width: 90%;
+    width: 100%;
     background-color: var(--ui-elements-color);
     border-radius: 5px;
     padding: 10px;
-    margin: 10px 0
 }
 
 .button_wrapper{
     width: 9%;
-    margin-top: 10px;
 }
 
 .button{
@@ -61,9 +59,14 @@
     font-size: 16px;
 }
 
-.input_wrapper{
+.footer{
     display: flex;
     justify-content: space-between;
+    margin: 10px 0;
+}
+
+.input_wrapper{
+    width: 90%;
 }
 
 .header__img{
@@ -75,4 +78,31 @@
 .header__link_to_companion{
     display: flex;
     align-items: center;
+}
+
+.images_wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--ui-elements-color);
+    border-radius: 5px 5px 0 0;
+}
+
+.image_preview {
+    width: 100px;
+    height: 100px;
+    margin: 5px 5px 0 5px;
+}
+
+.image_wrapper{
+    position: relative;
+}
+
+.image_cancel{
+    position: absolute;
+    top: -3px;
+    right: 5px;
+    color: red;
+    user-select: none;
+    cursor: pointer;
+    font-size: 20px;
 }

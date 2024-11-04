@@ -27,6 +27,8 @@ const Chat = () => {
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
     const [currentPage, setCurrentPage] = useState(-1);
     const navigate = useNavigate();
+    const [files, setFiles] = useState<File[]>([]);
+    const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
     const userId = useSelector((state: RootState) => state.user.user?.id);
 
@@ -70,9 +72,6 @@ const Chat = () => {
                     {withCredentials: true}
                 )
                 .then((res) => {
-
-                    console.log()
-
                     if (currentPage === -1) {
                         setCurrentPage(res.data.pages);
                         return;
@@ -143,24 +142,39 @@ const Chat = () => {
         }
     }, [conversationId]);
 
-    const handleSend = () => {
-
+    const handleSend = async () => {
         if (text.trim() === "") {
             return;
         }
 
         if (socket) {
-            socket.send(JSON.stringify({content: text, files: []}))
-            setText("")
-            return;
+            const fileDataArray = files.length > 0
+                ? await Promise.all(files.map(async file => {
+                    const buffer = await convertFileToArrayBuffer(file);
+                    return {
+                        name: file.name,
+                        data: Array.from(new Uint8Array(buffer)) // Преобразуем ArrayBuffer в массив байтов
+                    };
+                }))
+                : [];
+
+            // Форматируем и отправляем сообщение
+            socket.send(JSON.stringify({
+                content: text.trim(),
+                files: fileDataArray
+            }));
+
+            setText("");
+            setFiles([]);
+            setImagePreviews([]);
+        } else if (conversationId === -1) {
+            axios.post<MessageType>(`${API_URL}/api/chats/${id}/send-message`, { content: text }, { withCredentials: true })
+                .then((res) => {
+                    setMessages([res.data]);
+                    setConversationId(res.data.conversation_id);
+                });
         }
-        if (conversationId === -1) {
-            axios.post<MessageType>(`${API_URL}/api/chats/${id}/send-message`, {content: text}, {withCredentials: true}).then((res) => {
-                setMessages([res.data])
-                setConversationId(res.data.conversation_id)
-            })
-        }
-    }
+    };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && e.shiftKey) {
@@ -189,6 +203,45 @@ const Chat = () => {
         }
     }, [messages, isScrolledToBottom]);
 
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const newFiles = Array.from(e.dataTransfer.files);
+        setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+
+        newFiles.forEach(file => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreviews((prevPreviews) => [...prevPreviews, reader.result as string]);
+            };
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handleRemoveImage = (index: number) => {
+        setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+        setImagePreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    };
+
+    const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    };
+
+    const convertFileToArrayBuffer = (file: File): Promise<ArrayBuffer> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (reader.result) resolve(reader.result as ArrayBuffer);
+            };
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file);
+        });
+    };
+
     return (
         <>
             <Header/>
@@ -208,9 +261,24 @@ const Chat = () => {
                                                                    message={message.content}
                                                                    profile_image={message.profile_picture}/>)}
                     </div>
-                    <div className={styles.input_wrapper}>
-                        <textarea value={text} onChange={handleInput} rows={1} ref={textareaRef}
-                                  className={styles.input} onKeyDown={handleKeyDown}/>
+                    <div onDragOver={handleDragOver} onDragEnter={handleDragEnter} onDrop={handleDrop}
+                         className={styles.footer}>
+                        <input style={{display: "none"}} type="file" multiple/>
+                        <div className={styles.input_wrapper}>
+                            <div className={styles.images_wrapper}>
+                                {imagePreviews.map((src, index) => (
+                                    <div key={index} className={styles.image_wrapper}>
+                                        <img src={src} alt={`file-preview-${index}`}
+                                             className={styles.image_preview}/>
+                                        <span onClick={() => {
+                                            handleRemoveImage(index)
+                                        }} className={styles.image_cancel}>X</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <textarea style={ imagePreviews.length > 0 ? {borderRadius:"0 0 5px 5px"} : {}} value={text} onChange={handleInput} rows={1} ref={textareaRef}
+                                      className={styles.input} onKeyDown={handleKeyDown}/>
+                        </div>
                         <div className={styles.button_wrapper}>
                             <button onClick={handleSend} className={styles.button}>Send</button>
                         </div>

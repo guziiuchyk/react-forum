@@ -12,6 +12,7 @@ import {RootState} from "../../redux/store.ts";
 import axios from "axios";
 import Tag from "./tag/tag.tsx";
 import ConfirmationModal from "../confirmationModal/confirmationModal.tsx";
+import {API_URL} from "../../config.ts";
 
 interface PostProps {
     "id": number,
@@ -41,7 +42,7 @@ const Post: React.FC<PostProps> = (props) => {
     const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
 
     const deletePost = (id:number) => {
-        axios.delete(`http://localhost:8000/api/posts/${id}`, {withCredentials:true}).then(()=> {
+        axios.delete(`${API_URL}/api/posts/${id}`, {withCredentials:true}).then(()=> {
             if(wrapperRef.current) {
                 wrapperRef.current.remove();
             }
@@ -53,12 +54,12 @@ const Post: React.FC<PostProps> = (props) => {
     const handleLikeButton = (id:number) => {
         if(!isAuthenticated) return;
         if(isLiked){
-            axios.delete(`http://localhost:8000/api/posts/${id}/like/`, {withCredentials:true}).then(()=> {
+            axios.delete(`${API_URL}/api/posts/${id}/like/`, {withCredentials:true}).then(()=> {
                 info.likes -= 1
                 setIsLiked(false)
             })
         } else {
-            axios.post(`http://localhost:8000/api/posts/${id}/like/`, {}, {withCredentials:true}).then(()=> {
+            axios.post(`${API_URL}/api/posts/${id}/like/`, {}, {withCredentials:true}).then(()=> {
                 info.likes += 1
                 setIsLiked(true)
             })

@@ -15,8 +15,16 @@ const AboutUs:React.FC = () =>{
 
                 <div className={styles.team}>
                     <div className={styles.title}>Our Team</div>
-                    <div><strong>Nazar:</strong> Front-end Developer</div>
-                    <div><strong>Maksim:</strong> Back-end Developer</div>
+                    <div className={styles.team__item}>
+                        <div><strong>Nazar:</strong> Front-end Developer</div>
+                        <a href="https://github.com/twonumberfortyfives">GitHub</a>
+                        <a href="https://drive.google.com/file/d/1HfoJr5mGtFPtDffe-84r4uAXBNaypc9g/view?usp=sharing">CV</a>
+                    </div>
+                    <div className={styles.team__item}>
+                        <div><strong>Maksim:</strong> Back-end Developer</div>
+                        <a href="https://github.com/guziiuchyk">GitHub</a>
+                        <a href="https://drive.google.com/file/d/1Ze-mHMHQSOcu2AGutkv_g-jH7EB4RSRg/view?usp=sharing">CV</a>
+                    </div>
                 </div>
 
                 <div className={styles.project_info}>
