@@ -33,10 +33,6 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
                     setCurrentPage(res.data.pages);
                     return;
                 }
-                if (currentPage === -1) {
-                    setCurrentPage(res.data.pages);
-                    return;
-                }
 
                 if (scrollRef.current) {
                     const previousScrollHeight = scrollRef.current.scrollHeight;

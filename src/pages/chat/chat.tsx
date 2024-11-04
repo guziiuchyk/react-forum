@@ -21,6 +21,10 @@ const Chat = () => {
     const [socket, setSocket] = useState<WebSocket | null>(null)
     const [messages, setMessages] = useState<MessageType[]>([])
     const [conversationId, setConversationId] = useState<number | null>(null)
+    const [fetching, setFetching] = useState(true);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+    const [currentPage, setCurrentPage] = useState(-1);
     const navigate = useNavigate();
 
     const userId = useSelector((state: RootState) => state.user.user?.id);
@@ -51,34 +55,79 @@ const Chat = () => {
     }, []);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userResponse = await axios.get<GetApiPaginationGeneric<UserType>>(`http://localhost:8000/api/users/${id}`)
-                setCompanion(userResponse.data.items[0])
-            } catch {
-                navigate("/not-found");
+        const fetchData = () => {
+            if (currentPage === 0) {
+                return;
             }
-            try {
-                const messagesResponse = await axios.get<GetApiPaginationGeneric<MessageType>>(`http://localhost:8000/api/chats/${id}`, {withCredentials: true})
-                setMessages(messagesResponse.data.items)
-                setConversationId(messagesResponse.data.items[0].conversation_id)
-            } catch (err: unknown) {
 
-                const error = err as AxiosError;
+            const pageSize = 20;
 
-                if (error.response?.status === 400) {
-                    console.log(400)
-                    setConversationId(-1)
-                }
-            }
-            setIsLoading(false);
+            axios.get<GetApiPaginationGeneric<MessageType>>(
+                    `http://localhost:8000/api/chats/${id}?size=${pageSize}&page=${
+                        currentPage === -1 ? 1 : currentPage
+                    }`,
+                    {withCredentials: true}
+                )
+                .then((res) => {
+
+                    console.log()
+
+                    if (currentPage === -1) {
+                        setCurrentPage(res.data.pages);
+                        return;
+                    }
+
+                    setConversationId(res.data.items[0].conversation_id);
+                    setMessages((prevMessages) => [...res.data.items, ...prevMessages]);
+
+                    if (scrollRef.current) {
+                        const previousScrollHeight = scrollRef.current.scrollHeight;
+
+                        setTimeout(() => {
+                            if (scrollRef.current) {
+                                const newScrollHeight = scrollRef.current.scrollHeight;
+                                scrollRef.current.scrollTop += newScrollHeight - previousScrollHeight;
+                            }
+                        }, 0);
+                    }
+
+                    setIsLoading(false);
+                    setFetching(false);
+
+                    if (res.data.items.length < pageSize) {
+                        setCurrentPage((prevPage) => prevPage - 1);
+                        setFetching(true);
+                    }
+                })
+                .catch((err: AxiosError) => {
+                    if (err.response?.status === 400) {
+                        setConversationId(-1);
+                    }
+                });
+        };
+
+
+        const fetchUser = () => {
+            axios
+                .get<GetApiPaginationGeneric<UserType>>(`http://localhost:8000/api/users/${id}`)
+                .then((res) => {
+                    setCompanion(res.data.items[0]);
+                    setIsLoading(true);
+                })
+                .catch(() => {
+                    navigate("/not-found");
+                });
+        };
+
+        if (fetching) {
+            fetchData();
         }
 
         if (isLoading && !companion) {
-            fetchData()
+            fetchUser();
         }
+    }, [companion, currentPage, fetching, id, isLoading, navigate]);
 
-    }, [companion, id, isLoading, navigate]);
 
     useEffect(() => {
         if (conversationId && conversationId > 0) {
@@ -105,9 +154,9 @@ const Chat = () => {
             return;
         }
         if (conversationId === -1) {
-            axios.post(`http://localhost:8000/api/chats/${id}/send-message`, {content: text}, {withCredentials: true}).then((response) => {
-                console.log(response)
-                window.location.reload();
+            axios.post<MessageType>(`http://localhost:8000/api/chats/${id}/send-message`, {content: text}, {withCredentials: true}).then((res) => {
+                setMessages([res.data])
+                setConversationId(res.data.conversation_id)
             })
         }
     }
@@ -123,6 +172,22 @@ const Chat = () => {
         }
     };
 
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLDivElement;
+        const {scrollTop, scrollHeight, clientHeight} = target;
+        setIsScrolledToBottom(scrollTop + clientHeight >= scrollHeight);
+        if (target.scrollTop < 100 && currentPage > 1 && !fetching) {
+            setFetching(true);
+            setCurrentPage((prevPage) => prevPage - 1);
+        }
+    };
+
+    useEffect(() => {
+        if (isScrolledToBottom && scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [messages, isScrolledToBottom]);
+
     return (
         <>
             <Header/>
@@ -136,9 +201,9 @@ const Chat = () => {
                             <div className={styles.title}>{companion.username}</div>
                         </Link>
                     </div>
-                    <div className={styles.chat}>
+                    <div className={styles.chat} ref={scrollRef} onScroll={handleScroll}>
                         {messages.map((message, index) => <Message id={message.id} key={index}
-                                                                   isAuthor={message.sender_id === Number(userId)}
+                                                                   isAuthor={message.user_id === Number(userId)}
                                                                    message={message.content}
                                                                    profile_image={message.profile_picture}/>)}
                     </div>

@@ -61,8 +61,6 @@ export interface ChatType{
 
 export interface MessageType {
     id: number,
-    sender_id: number;
-    receiver_id: number;
     conversation_id: number,
     created_at: string,
     user_id: number,
