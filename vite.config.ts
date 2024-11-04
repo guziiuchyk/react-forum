@@ -6,7 +6,12 @@ export default defineConfig({
   plugins: [react()],
   /*base:"/react-forum/",*/
   server: {
-    host: true,
-    port: 5173,
-  }
+    proxy: {
+      '/api': {
+        target: 'https://test.backendserviceforumapi.online',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 })
