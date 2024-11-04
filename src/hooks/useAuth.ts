@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import {login, notAuthorized} from "../redux/slices/userSlice.ts";
+import {API_URL} from "../config.ts";
 
 const useAuth = (): boolean | null => {
 
@@ -14,7 +15,7 @@ const useAuth = (): boolean | null => {
         const checkAuthentication = async (): Promise<void> => {
             if (isAuthenticated !== null) return;
             try {
-                const profile = await axios.get("http://localhost:8000/api/my-profile", { withCredentials: true });
+                const profile = await axios.get(`${API_URL}/api/my-profile`, { withCredentials: true });
                 dispatch(login(profile.data));
             } catch {
                 dispatch(notAuthorized())
