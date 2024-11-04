@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import styles from "./CreatePost.module.css";
+import styles from "./createPost.module.css";
 import Header from "../../components/header/header.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/useAuth.ts";
