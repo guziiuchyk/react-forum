@@ -8,6 +8,7 @@ import NotFound from "../../components/notFound/notFound.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
 import PostsPagination from "../../components/postsPagination/postsPagination.tsx";
+import {API_URL} from "../../config.ts";
 
 const Profile: React.FC = () => {
 
@@ -22,7 +23,7 @@ const Profile: React.FC = () => {
 
     useEffect(() => {
         const fetchUser = () => {
-            axios.get<GetApiPaginationGeneric<UserType>>(`http://localhost:8000/api/users/${id}`).then((res) => {
+            axios.get<GetApiPaginationGeneric<UserType>>(`${API_URL}/api/users/${id}`).then((res) => {
                 setUser(res.data.items[0]);
                 setIsLoading(false);
             })

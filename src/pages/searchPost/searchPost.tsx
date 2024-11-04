@@ -8,6 +8,7 @@ import User from "../../components/user/user.tsx";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store.ts";
 import { GetApiPaginationGeneric, PostType, UserType } from "../../types/types.ts";
+import {API_URL} from "../../config.ts";
 
 const SearchPost: React.FC = () => {
     const [posts, setPosts] = useState<PostType[]>([]);
@@ -41,8 +42,8 @@ const SearchPost: React.FC = () => {
     useEffect(() => {
         const fetchItems = (): void => {
             const url = isUserSearch
-                ? `http://localhost:8000/api/users/${debouncedSearchText.slice(1)}?size=10&page=${currentPage}`
-                : `http://localhost:8000/api/posts/${debouncedSearchText}?size=5&page=${currentPage}`;
+                ? `${API_URL}/api/users/${debouncedSearchText.slice(1)}?size=10&page=${currentPage}`
+                : `${API_URL}/api/posts/${debouncedSearchText}?size=5&page=${currentPage}`;
 
             axios.get<GetApiPaginationGeneric<PostType | UserType>>(url, { withCredentials: true })
                 .then((res) => {

@@ -5,6 +5,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/useAuth.ts";
 import paperIcon from "../../assets/paper-icon.svg"
 import axios from "axios";
+import {API_URL} from "../../config.ts";
 
 const CreatePost: React.FC = () => {
     const [topic, setTopic] = useState("");
@@ -64,7 +65,7 @@ const CreatePost: React.FC = () => {
         }
         const queryParams = `?topic=${encodeURIComponent(topic)}&content=${encodeURIComponent(content)}${tags ? `&tags=${encodeURIComponent(tags.split(" ").join(", "))}` : ""}`;
 
-        axios.post(`http://localhost:8000/api/posts${queryParams}`, formData, {
+        axios.post(`${API_URL}/api/posts${queryParams}`, formData, {
             withCredentials: true,
             headers: {
                 "Content-Type": "multipart/form-data",

@@ -7,6 +7,7 @@ import useAuth from "../../hooks/useAuth.ts";
 import {useNavigate} from "react-router-dom";
 import {UserType} from "../../types/types.ts";
 import PostsPagination from "../../components/postsPagination/postsPagination.tsx";
+import {API_URL} from "../../config.ts";
 
 const MyProfile: React.FC = () => {
 
@@ -35,7 +36,7 @@ const MyProfile: React.FC = () => {
                     </div>
 
                     <div className={styles.posts_wrapper}>
-                        <PostsPagination link={`http://localhost:8000/api/users/${user.id}/posts/`}/>
+                        <PostsPagination link={`${API_URL}/api/users/${user.id}/posts/`}/>
                     </div>
                 </div>
                 : <div>Loading...</div>}

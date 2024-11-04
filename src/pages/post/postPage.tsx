@@ -19,6 +19,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import Comments from "./comments/comments.tsx";
 import ImageViewer from "./imageViewer/imageViewer.tsx"
+import {API_URL} from "../../config.ts";
 
 const PostPage: React.FC = () => {
     const {id} = useParams();
@@ -35,7 +36,7 @@ const PostPage: React.FC = () => {
 
     useEffect(() => {
         if (loading) {
-            axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts/${id}`, {withCredentials: true}).then(res => {
+            axios.get<GetApiPaginationGeneric<PostType>>(`${API_URL}/api/posts/${id}`, {withCredentials: true}).then(res => {
                 setPost(res.data.items[0]);
             }).finally(() => setLoading(false));
         }
@@ -43,7 +44,7 @@ const PostPage: React.FC = () => {
 
     const deletePost = async () => {
         try {
-            await axios.delete(`http://localhost:8000/api/posts/${id}`, {withCredentials: true});
+            await axios.delete(`${API_URL}/api/posts/${id}`, {withCredentials: true});
             navigate("/");
         } catch (err) {
             console.log(err);
@@ -53,7 +54,7 @@ const PostPage: React.FC = () => {
     const handleLikeButton = () => {
         if (!isAuth) return;
         if (post?.is_liked) {
-            axios.delete(`http://localhost:8000/api/posts/${id}/like/`, {withCredentials: true}).then(() => {
+            axios.delete(`${API_URL}/api/posts/${id}/like/`, {withCredentials: true}).then(() => {
                 setPost(prevState => {
                     if (prevState) {
                         return {
@@ -67,7 +68,7 @@ const PostPage: React.FC = () => {
 
             })
         } else {
-            axios.post(`http://localhost:8000/api/posts/${id}/like/`, {}, {withCredentials: true}).then(() => {
+            axios.post(`${API_URL}/api/posts/${id}/like/`, {}, {withCredentials: true}).then(() => {
                 setPost(prevState => {
                     if (prevState) {
                         return {

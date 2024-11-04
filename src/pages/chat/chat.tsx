@@ -10,6 +10,7 @@ import NotFound from "../../components/notFound/notFound.tsx";
 import useAuth from "../../hooks/useAuth.ts";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
+import {API_URL, WS_URL} from "../../config.ts";
 
 const Chat = () => {
     const id = Number(useParams().id)
@@ -63,7 +64,7 @@ const Chat = () => {
             const pageSize = 20;
 
             axios.get<GetApiPaginationGeneric<MessageType>>(
-                    `http://localhost:8000/api/chats/${id}?size=${pageSize}&page=${
+                    `${API_URL}/api/chats/${id}?size=${pageSize}&page=${
                         currentPage === -1 ? 1 : currentPage
                     }`,
                     {withCredentials: true}
@@ -109,7 +110,7 @@ const Chat = () => {
 
         const fetchUser = () => {
             axios
-                .get<GetApiPaginationGeneric<UserType>>(`http://localhost:8000/api/users/${id}`)
+                .get<GetApiPaginationGeneric<UserType>>(`${API_URL}/api/users/${id}`)
                 .then((res) => {
                     setCompanion(res.data.items[0]);
                     setIsLoading(true);
@@ -131,7 +132,7 @@ const Chat = () => {
 
     useEffect(() => {
         if (conversationId && conversationId > 0) {
-            const socket = new WebSocket(`ws://localhost:8000/ws/chats/${conversationId}`)
+            const socket = new WebSocket(`${WS_URL}/ws/chats/${conversationId}`)
             setSocket(socket)
             socket.onmessage = (e: MessageEvent<string>) => {
                 setMessages(prevState => [...prevState, JSON.parse(e.data) as MessageType])
@@ -154,7 +155,7 @@ const Chat = () => {
             return;
         }
         if (conversationId === -1) {
-            axios.post<MessageType>(`http://localhost:8000/api/chats/${id}/send-message`, {content: text}, {withCredentials: true}).then((res) => {
+            axios.post<MessageType>(`${API_URL}/api/chats/${id}/send-message`, {content: text}, {withCredentials: true}).then((res) => {
                 setMessages([res.data])
                 setConversationId(res.data.conversation_id)
             })

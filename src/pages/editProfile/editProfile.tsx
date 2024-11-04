@@ -8,6 +8,7 @@ import {RootState} from "../../redux/store.ts";
 import axios from "axios";
 import {login} from "../../redux/slices/userSlice.ts";
 import {UserType} from "../../types/types.ts";
+import {API_URL} from "../../config.ts";
 
 const EditProfile: React.FC = () => {
 
@@ -92,7 +93,7 @@ const EditProfile: React.FC = () => {
             return;
         }
 
-        axios.patch<UserType>(`http://localhost:8000/api/my-profile?${queryString}`, formData, {
+        axios.patch<UserType>(`${API_URL}/api/my-profile?${queryString}`, formData, {
             withCredentials: true, headers: {
                 "Content-Type": "multipart/form-data",
             }

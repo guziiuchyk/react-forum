@@ -6,6 +6,7 @@ import axios from "axios";
 import useAuth from "../../hooks/useAuth.ts";
 import {useDispatch} from "react-redux";
 import {login} from "../../redux/slices/userSlice.ts";
+import {API_URL} from "../../config.ts";
 
 const Login: React.FC = () => {
 
@@ -30,11 +31,10 @@ const Login: React.FC = () => {
             return;
         }
 
-        axios.post("http://localhost:8000/api/login", {email, password}, {
+        axios.post(`${API_URL}/api/login`, {email, password}, {
             withCredentials: true
         }).then(() => {
-            axios.get("http://localhost:8000/api/my-profile", {withCredentials:true}).then((res) => {
-                localStorage.setItem("isAuthenticated", "true");
+            axios.get(`${API_URL}/api/my-profile`, {withCredentials:true}).then((res) => {
                 dispatch(login(res.data));
                 navigate("/profile");
             })

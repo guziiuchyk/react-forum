@@ -8,6 +8,7 @@ import NotFound from "../../components/notFound/notFound.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../redux/store.ts";
 import useAuth from "../../hooks/useAuth.ts";
+import {API_URL} from "../../config.ts";
 
 const EditPost: React.FC = () => {
 
@@ -57,14 +58,14 @@ const EditPost: React.FC = () => {
             return;
         }
 
-        axios.patch(`http://localhost:8000/api/posts/${id}?${queryString}`,{},{withCredentials:true}).then(() => {
+        axios.patch(`${API_URL}/api/posts/${id}?${queryString}`,{},{withCredentials:true}).then(() => {
             navigate(`/posts/${id}`)
         })
     }
 
     useEffect(() => {
         const fetchPost = () => {
-            axios.get<GetApiPaginationGeneric<PostType>>(`http://localhost:8000/api/posts/${id}`).then((res) => {
+            axios.get<GetApiPaginationGeneric<PostType>>(`${API_URL}/api/posts/${id}`).then((res) => {
                 setIsLoading(false);
                 const post = res.data.items[0]
                 if(user?.id !== post.user.id){

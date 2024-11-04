@@ -4,6 +4,7 @@ import styles from "./register.module.css"
 import {Link, useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/useAuth.ts";
 import axios from "axios";
+import {API_URL} from "../../config.ts";
 
 const Register: React.FC = () => {
 
@@ -73,7 +74,7 @@ const Register: React.FC = () => {
             return;
         }
 
-        axios.post("http://localhost:8000/api/register", {username, email, password}, {withCredentials:true}).then((res) => {
+        axios.post(`${API_URL}/api/register`, {username, email, password}, {withCredentials:true}).then((res) => {
             console.log(res)
             navigate("/login", {replace: true});
         }).catch((err) => {

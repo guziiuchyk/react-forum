@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import axios, {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/useAuth.ts";
+import {API_URL} from "../../config.ts";
 
 const ChangePassword:React.FC = () => {
     const [oldPassword, setOldPassword] = useState("");
@@ -46,7 +47,7 @@ const ChangePassword:React.FC = () => {
             setError("New password must contain uppercase");
             return;
         }
-        axios.patch("http://localhost:8000/api/my-profile/change-password", {"old_password":oldPassword, "new_password": newPassword}, {withCredentials:true}).then(() => {
+        axios.patch(`${API_URL}/api/my-profile/change-password`, {"old_password":oldPassword, "new_password": newPassword}, {withCredentials:true}).then(() => {
             navigate("/profile")
         }).catch((err: AxiosError) => {
             if(err.response?.status === 401){

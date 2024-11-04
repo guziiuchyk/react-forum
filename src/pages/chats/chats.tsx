@@ -4,15 +4,26 @@ import React, {useEffect, useState} from "react";
 import Chat from "./chat/chat.tsx";
 import {ChatType, GetApiPaginationGeneric} from "../../types/types.ts";
 import axios from "axios";
+import useAuth from "../../hooks/useAuth.ts";
+import {useNavigate} from "react-router-dom";
+import {API_URL} from "../../config.ts";
 
 const Chats: React.FC = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [chats, setChats] = useState<ChatType[]>([]);
+    const isAuth = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(isAuth === false){
+            navigate("/login");
+        }
+    }, [isAuth, navigate]);
 
     useEffect(() => {
         const fetchChats = () => {
-            axios.get<GetApiPaginationGeneric<ChatType>>("http://localhost:8000/api/chats?page=1&size=50", {withCredentials: true})
+            axios.get<GetApiPaginationGeneric<ChatType>>(`${API_URL}/api/chats?page=1&size=50`, {withCredentials: true})
                 .then((res) => {
                     setChats(res.data.items);
                 })

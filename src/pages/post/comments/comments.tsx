@@ -6,6 +6,7 @@ import {CommentType, GetApiPaginationGeneric, PostType} from "../../../types/typ
 import {useSelector} from "react-redux";
 import {RootState} from "../../../redux/store.ts";
 import axios from "axios";
+import {API_URL, WS_URL} from "../../../config.ts";
 
 type PropsType = {
     id: number;
@@ -28,7 +29,7 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
 
     useEffect(() => {
         const fetchComments = () => {
-            axios.get<GetApiPaginationGeneric<CommentType>>(`http://localhost:8000/api/posts/${props.id}/all-comments?size=10&page=${currentPage === -1 ? 1 : currentPage}`).then(res => {
+            axios.get<GetApiPaginationGeneric<CommentType>>(`${API_URL}/api/posts/${props.id}/all-comments?size=10&page=${currentPage === -1 ? 1 : currentPage}`).then(res => {
                 if (currentPage === -1) {
                     setCurrentPage(res.data.pages);
                     return;
@@ -65,7 +66,7 @@ const Comments: React.FC<PropsType> = (props: PropsType) => {
     };
 
     useEffect(() => {
-        const socket = new WebSocket(`ws://localhost:8000/ws/posts/${props.id}`);
+        const socket = new WebSocket(`${WS_URL}/ws/posts/${props.id}`);
         socket.onmessage = (e: MessageEvent<string>) => {
             const comment = JSON.parse(e.data) as CommentType;
             setComments((prevComments) => [...prevComments, comment]);

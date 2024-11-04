@@ -5,6 +5,7 @@ import axios from "axios";
 import useAuth from "../../hooks/useAuth.ts";
 import {useNavigate} from "react-router-dom";
 import ConfirmationModal from "../../components/confirmationModal/confirmationModal.tsx";
+import {API_URL} from "../../config.ts";
 
 const DeleteAccount:React.FC = () => {
 
@@ -24,7 +25,7 @@ const DeleteAccount:React.FC = () => {
     }
 
     const handleDelete = () => {
-        axios.delete("http://localhost:8000/api/my-profile", {data:{password}, withCredentials:true}).then(() => {
+        axios.delete(`${API_URL}/api/my-profile`, {data:{password}, withCredentials:true}).then(() => {
             navigate("/login");
         }).catch(()=>{
             setError("Wrong password.");
