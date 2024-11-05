@@ -6,15 +6,7 @@ import { Provider } from 'react-redux'
 import "./index.css"
 import "./variables.css"
 import "./normalize.css"
-/*
-createRoot(document.getElementById('root')!).render(
-    <Provider store={store}>
-        <StrictMode>
-            <RouterProvider router={router}/>
-        </StrictMode>
-    </Provider>
-)
-*/
+
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
             <RouterProvider router={router}/>

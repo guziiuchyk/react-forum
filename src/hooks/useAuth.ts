@@ -15,7 +15,7 @@ const useAuth = (): boolean | null => {
         const checkAuthentication = async (): Promise<void> => {
             if (isAuthenticated !== null) return;
             try {
-                const profile = await axios.get(`${API_URL}/api/my-profile`, { withCredentials: true });
+                const profile = await axios.get(`${API_URL}/api/my-profile`, { withCredentials: true, headers:{"Access-Control-Allow-Origin":"https://opiskelija9.amiskoodari.fi"}});
                 dispatch(login(profile.data));
             } catch {
                 dispatch(notAuthorized())

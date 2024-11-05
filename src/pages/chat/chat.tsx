@@ -103,6 +103,8 @@ const Chat = () => {
                     if (err.response?.status === 400) {
                         setConversationId(-1);
                     }
+                    setIsLoading(false);
+                    setFetching(false);
                 });
         };
 
