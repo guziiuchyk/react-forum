@@ -98,4 +98,4 @@ export const router = createBrowserRouter([
         element: <Chat/>,
         errorElement: <Error/>
     }
-], {basename:"/react-forum"});
+]/*, {basename:"/react-forum"}*/);
