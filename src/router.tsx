@@ -16,6 +16,7 @@ import ChangePassword from "./pages/changePassword/changePassword.tsx";
 import DeleteAccount from "./pages/deleteAccount/deleteAccount.tsx";
 import Chats from "./pages/chats/chats.tsx";
 import Chat from "./pages/chat/chat.tsx";
+import Users from "./pages/users/users.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -96,6 +97,11 @@ export const router = createBrowserRouter([
     {
         path: "/chats/:id",
         element: <Chat/>,
+        errorElement: <Error/>
+    },
+    {
+        path:"/users",
+        element: <Users/>,
         errorElement: <Error/>
     }
 ]/*, {basename:"/react-forum"}*/);

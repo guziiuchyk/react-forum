@@ -4,7 +4,6 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 import homeImage from "../../assets/home.svg";
 import messageImage from "../../assets/message.svg";
 import searchImage from "../../assets/search_icon.svg";
-import notificationImage from "../../assets/notification.svg";
 import groupImage from "../../assets/group.svg";
 import aboutUsImg from "../../assets/about-us.svg";
 import expandArrow from "../../assets/expand-arrow.svg"
@@ -75,14 +74,14 @@ const Header: React.FC = () => {
         <header className={styles.wrapper}>
             <div className={styles.logo_and_nav}>
                 <div className={styles.logo}>
-                    <span className={styles.logo__img}>A</span>
+                    <span className={styles.logo__img}>Σ</span>
                     <div className={styles.logo__text}>Agora</div>
                 </div>
                 <nav className={styles.links}>
                     <Link to={"/"} className={styles.link_wrapper}>
                         <img src={homeImage} alt="home link"/>
                     </Link>
-                    <Link to={"/groups"} className={styles.link_wrapper}>
+                    <Link to={"/users"} className={styles.link_wrapper}>
                         <img src={groupImage} alt="groups link"/>
                     </Link>
                     <Link to={"/about-us"} className={styles.link_wrapper}>
@@ -107,9 +106,9 @@ const Header: React.FC = () => {
             </div>
             {isAuthenticated ? (
                 <div className={styles.profile_wrapper}>
-                    <Link to={"/"} className={styles.profile__link}>
+                    {/*<Link to={"/"} className={styles.profile__link}>
                         <img src={notificationImage} alt="notifications link"/>
-                    </Link>
+                    </Link>*/}
                     <Link to={"/chats"} className={styles.profile__link}>
                         <img src={messageImage} alt="messages link"/>
                     </Link>
