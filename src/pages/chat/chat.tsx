@@ -131,12 +131,18 @@ const Chat = () => {
     }, [companion, currentPage, fetching, id, isLoading, navigate]);
 
 
+
     useEffect(() => {
         if (conversationId && conversationId > 0) {
             const socket = new WebSocket(`${WS_URL}/ws/chats/${conversationId}`)
             setSocket(socket)
             socket.onmessage = (e: MessageEvent<string>) => {
-                setMessages(prevState => [...prevState, JSON.parse(e.data) as MessageType])
+
+                const newMessage = JSON.parse(e.data)
+
+                newMessage.files = newMessage.files.map((file:string, index:number) => ({ link: file, id: index }));
+
+                setMessages(prevState => [...prevState, newMessage]);
             }
             return () => {
                 socket.close()
@@ -155,12 +161,11 @@ const Chat = () => {
                     const buffer = await convertFileToArrayBuffer(file);
                     return {
                         name: file.name,
-                        data: Array.from(new Uint8Array(buffer)) // Преобразуем ArrayBuffer в массив байтов
+                        data: Array.from(new Uint8Array(buffer))
                     };
                 }))
                 : [];
 
-            // Форматируем и отправляем сообщение
             socket.send(JSON.stringify({
                 content: text.trim(),
                 files: fileDataArray
@@ -259,7 +264,7 @@ const Chat = () => {
                     </div>
                     <div className={styles.chat} ref={scrollRef} onScroll={handleScroll}>
                         {messages.map((message, index) => <Message id={message.id} key={index}
-                                                                   files={message.files}
+                                                                   files={message.files.map(file => file.link)}
                                                                    isAuthor={message.user_id === Number(userId)}
                                                                    message={message.content}
                                                                    profile_image={message.profile_picture}/>)}

@@ -18,7 +18,7 @@ import useAuth from "../../hooks/useAuth.ts";
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import Comments from "./comments/comments.tsx";
-import ImageViewer from "./imageViewer/imageViewer.tsx"
+import ImageViewer from "../../components/imageViewer/imageViewer.tsx"
 import {API_URL} from "../../config.ts";
 
 const PostPage: React.FC = () => {
@@ -26,6 +26,7 @@ const PostPage: React.FC = () => {
     const [post, setPost] = useState<PostType | null>(null);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const timeAgo = useTimeAgo(post?.created_at || "")
@@ -106,7 +107,7 @@ const PostPage: React.FC = () => {
                                                 className={styles.nav__button}>
                                             <img className={styles.nav__button__img} src={editImage} alt="edit"/>
                                         </button>
-                                        <button onClick={() => setModalOpen(true)} className={styles.nav__button}>
+                                        <button onClick={() => setConfirmationModalOpen(true)} className={styles.nav__button}>
                                             <img className={styles.nav__button__img} src={removeImage} alt="delete"/>
                                         </button>
                                     </>
@@ -124,7 +125,7 @@ const PostPage: React.FC = () => {
                                         key={index}
                                         src={file.link}
                                         alt=""
-                                        onClick={() => openImageViewer(index)} // Открываем просмотрщик
+                                        onClick={() => openImageViewer(index)}
                                     />
                                 ))}
                             </div>: null}
@@ -157,8 +158,8 @@ const PostPage: React.FC = () => {
 
             <ConfirmationModal
                 text="Are you sure you want to delete this post?"
-                isOpen={isModalOpen}
-                onClose={() => setModalOpen(false)}
+                isOpen={confirmationModalOpen}
+                onClose={() => setConfirmationModalOpen(false)}
                 onConfirm={deletePost}
             />
 
