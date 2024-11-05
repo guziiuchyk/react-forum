@@ -7,6 +7,7 @@ import searchImage from "../../assets/search_icon.svg";
 import groupImage from "../../assets/group.svg";
 import aboutUsImg from "../../assets/about-us.svg";
 import expandArrow from "../../assets/expand-arrow.svg"
+import logo from "../../assets/logo.svg"
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from '../../redux/store';
 import useAuth from "../../hooks/useAuth.ts";
@@ -74,7 +75,9 @@ const Header: React.FC = () => {
         <header className={styles.wrapper}>
             <div className={styles.logo_and_nav}>
                 <div className={styles.logo}>
-                    <span className={styles.logo__img}>Σ</span>
+                    <span className={styles.logo__img}>
+                        <img src={logo} alt="logo"/>
+                    </span>
                     <div className={styles.logo__text}>Agora</div>
                 </div>
                 <nav className={styles.links}>

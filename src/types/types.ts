@@ -67,5 +67,5 @@ export interface MessageType {
     content: string,
     username: string,
     profile_picture:string,
-    files: string[]
+    files: {link: string, id: number}[],
 }

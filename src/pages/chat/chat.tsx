@@ -259,6 +259,7 @@ const Chat = () => {
                     </div>
                     <div className={styles.chat} ref={scrollRef} onScroll={handleScroll}>
                         {messages.map((message, index) => <Message id={message.id} key={index}
+                                                                   files={message.files}
                                                                    isAuthor={message.user_id === Number(userId)}
                                                                    message={message.content}
                                                                    profile_image={message.profile_picture}/>)}

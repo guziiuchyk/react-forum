@@ -30,3 +30,14 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
 }
+
+.preview_image{
+    max-width: 170px;
+    margin: 5px;
+    justify-content: center;
+}
+
+.images_wrapper{
+    display: flex;
+    flex-wrap: wrap;
+}

@@ -8,6 +8,7 @@ interface MessageProps {
     message: string;
     isAuthor: boolean;
     profile_image: string;
+    files: {link:string, id:number}[];
 }
 
 const Message: React.FC<MessageProps> = (props: MessageProps) => {
@@ -45,7 +46,14 @@ const Message: React.FC<MessageProps> = (props: MessageProps) => {
             <div onContextMenu={handleContextMenu} ref={wrapperRef} className={styles.message_wrapper}
                  style={props.isAuthor ? {flexDirection: 'row-reverse'} : {}}>
                 <img className={styles.image} src={props.profile_image} alt="profile"/>
-                <div className={styles.message}>{props.message}</div>
+                <div className={styles.message}>
+                    <div className={styles.images_wrapper}>
+                        {props.files.map((file, index) => (
+                            <img className={styles.preview_image} key={index} src={file.link} alt=""/>
+                        ))}
+                    </div>
+                    {props.message}
+                </div>
             </div>
             {showContextMenu ? <div
                 className={styles.context_menu}
