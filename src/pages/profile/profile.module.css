@@ -24,6 +24,7 @@
 }
 .profile__nav{
     margin-left: auto;
+    min-width: 144px;
 }
 .button{
     padding: 10px;
