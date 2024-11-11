@@ -177,6 +177,7 @@ const Chat = () => {
         } else if (conversationId === -1) {
             axios.post<MessageType>(`${API_URL}/api/chats/${id}/send-message`, { content: text }, { withCredentials: true })
                 .then((res) => {
+                    setText("")
                     setMessages([res.data]);
                     setConversationId(res.data.conversation_id);
                 });

@@ -63,7 +63,7 @@ const CreatePost: React.FC = () => {
         else {
             formData.append('files', "");
         }
-        const queryParams = `?topic=${encodeURIComponent(topic)}&content=${encodeURIComponent(content)}${tags ? `&tags=${encodeURIComponent(tags.split(" ").join(", "))}` : ""}`;
+        const queryParams = `?topic=${encodeURIComponent(topic.trim())}&content=${encodeURIComponent(content.trim())}${tags ? `&tags=${encodeURIComponent(tags.split(" ").join(", "))}` : ""}`;
 
         axios.post(`${API_URL}/api/posts${queryParams}`, formData, {
             withCredentials: true,

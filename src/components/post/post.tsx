@@ -68,7 +68,7 @@ const Post: React.FC<PostProps> = (props) => {
 
     return (
         <div ref={wrapperRef} className={styles.wrapper}>
-            <Link to={`/posts/${id}`} className={styles.title}>{topic}</Link>
+            <Link to={`/posts/${id}`} className={styles.title}>{topic.trim()}</Link>
             <div className={styles.buttons_wrapper}>
                 {isAuthor ? <>
                     <button onClick={()=>{navigate(`/edit-post/${id}`)}}>

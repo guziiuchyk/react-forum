@@ -117,7 +117,7 @@ const PostPage: React.FC = () => {
                                          src={post.is_liked ? likeActiveImage : likeImage} alt="like"/>
                                 </button>
                             </div>
-                            <div className={styles.topic}>{post.topic}</div>
+                            <div className={styles.topic}>{post.topic.trim()}</div>
                             {post.files.length > 0 ? <div className={styles.images}>
                                 {post.files.map((file,index) => (
                                     <img
@@ -130,7 +130,7 @@ const PostPage: React.FC = () => {
                                 ))}
                             </div>: null}
                             <div className={styles.description}>
-                                <ReactMarkdown remarkPlugins={[remarkBreaks]}>{post.content}</ReactMarkdown>
+                                <ReactMarkdown remarkPlugins={[remarkBreaks]}>{post.content.trim()}</ReactMarkdown>
                             </div>
                             <div className={styles.tags}>
                                 {post.tags.map((tag) => <Tag key={tag} tag={tag}/>)}
